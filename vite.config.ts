@@ -5,7 +5,7 @@ export default defineConfig({
   build: {
     target: 'node20',
     lib: {
-      entry: resolve(__dirname, 'src/index.js'),
+      entry: resolve(__dirname, 'src/index.ts'),
       formats: ['es'],
       fileName: 'index',
     },
@@ -14,6 +14,7 @@ export default defineConfig({
         '@modelcontextprotocol/sdk',
         '@modelcontextprotocol/sdk/server/index.js',
         '@modelcontextprotocol/sdk/server/stdio.js',
+        '@modelcontextprotocol/sdk/types.js',
         'node:process',
         'node:console',
       ],
@@ -27,5 +28,8 @@ export default defineConfig({
     emptyOutDir: true,
     minify: false,
     sourcemap: false,
+  },
+  resolve: {
+    extensions: ['.ts', '.js'],
   },
 });
