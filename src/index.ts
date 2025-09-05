@@ -1,16 +1,13 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { registerListRenderableItems } from "./tools/listRenderableItems";
+import { PlainlyMcpServer } from "./server";
+import env from "./env";
 
-// Create an MCP server
-const server = new McpServer({
-  name: "plainly-mcp-server",
-  version: "1.0.0",
-});
+// Validate required environment variables
+if (!env.PLAINLY_API_KEY || !env.PLAINLY_API_URL) {
+  console.error(
+    "Please set PLAINLY_API_KEY and PLAINLY_API_URL environment variables."
+  );
+  process.exit(1);
+}
 
-// Register tools
-registerListRenderableItems(server);
-
-// Start the stdio server
-const transport = new StdioServerTransport();
-await server.connect(transport);
+const server = new PlainlyMcpServer();
+await server.start();
