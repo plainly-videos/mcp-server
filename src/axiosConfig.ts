@@ -1,29 +1,21 @@
 import axios, { AxiosInstance } from "axios";
+import env from "./env";
 
 export function createAxiosInstance(config?: {
   baseUrl?: string;
   apiKey?: string;
 }): AxiosInstance {
-  const baseUrl = config?.baseUrl || process.env.PLAINLY_API_URL;
-  const apiKey = config?.apiKey || process.env.PLAINLY_API_KEY;
-
-  if (!baseUrl) {
-    throw new Error(
-      "Base URL is required. Set PLAINLY_API_URL environment variable or provide it in config."
-    );
-  }
-
-  if (!apiKey) {
-    throw new Error(
-      "API key is required. Set PLAINLY_API_KEY environment variable or provide it in config."
-    );
-  }
+  const baseUrl = config?.baseUrl || env.PLAINLY_API_URL;
+  const apiKey = config?.apiKey || env.PLAINLY_API_KEY;
 
   const instance = axios.create({
     baseURL: baseUrl,
+    auth: {
+      username: apiKey,
+      password: "",
+    },
     headers: {
-      Authorization: `Basic ${Buffer.from(`${apiKey}:`).toString("base64")}`,
-      "Content-Type": "application/json",
+      "User-Agent": "plainly-mcp-server/1.0",
     },
     timeout: 10000,
   });

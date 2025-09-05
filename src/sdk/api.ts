@@ -14,12 +14,12 @@ const listRenderableDesigns = async (): Promise<RenderableItem[]> => {
       id: design.id,
       name: design.name,
       description: design.description,
-      metadata: { category: design.category },
+      metadata: { category: design.category || null, attributes: null },
       templates: design.variants.map((variant) => ({
         id: variant.id,
         name: variant.name,
         aspectRatio: variant.aspectRatio,
-        duration: variant.duration,
+        durationSeconds: variant.duration,
       })),
     }));
 };
@@ -34,7 +34,7 @@ const listRenderableProjects = async (): Promise<RenderableItem[]> => {
       id: project.id,
       name: project.name,
       description: project.description,
-      metadata: { attributes: project.attributes },
+      metadata: { category: null, attributes: project.attributes || null },
       templates: project.templates.map((template) => ({
         id: template.id,
         name: template.name,
@@ -42,16 +42,26 @@ const listRenderableProjects = async (): Promise<RenderableItem[]> => {
           template.resolution.width,
           template.resolution.height
         ),
-        duration: template.duration,
+        durationSeconds: template.duration,
       })),
     }));
 };
 
-export const listRenderableItems = async (): Promise<RenderableItem[]> => {
-  const [designs, projects] = await Promise.all([
-    listRenderableDesigns(),
-    listRenderableProjects(),
-  ]);
+type ListOptions = {
+  excludeDesigns?: boolean;
+  excludeProjects?: boolean;
+};
 
-  return [...designs, ...projects];
+export const listRenderableItems = async (
+  options: ListOptions = {
+    excludeDesigns: false,
+    excludeProjects: false,
+  }
+): Promise<RenderableItem[]> => {
+  const designs = options.excludeDesigns ? [] : await listRenderableDesigns();
+  const projects = options.excludeProjects
+    ? []
+    : await listRenderableProjects();
+
+  return [...projects, ...designs];
 };

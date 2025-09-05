@@ -1,10 +1,18 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { listRenderableItems, RenderableTemplate } from "../sdk";
-import { asPlainObject } from "../utils/schema";
+import { listRenderableItems } from "../sdk";
 
 export function registerListRenderableItems(server: McpServer) {
-  const Input = {};
+  const Input = {
+    excludeDesigns: z
+      .boolean()
+      .optional()
+      .describe("If true, exclude designs from the results."),
+    excludeProjects: z
+      .boolean()
+      .optional()
+      .describe("If true, exclude projects from the results."),
+  };
   const Output = {
     items: z.array(
       z.object({
@@ -15,12 +23,13 @@ export function registerListRenderableItems(server: McpServer) {
         name: z.string().describe("Project/design display name."),
         description: z
           .string()
+          .nullable()
           .describe("Short description of the project/design."),
         metadata: z.object({
-          category: z.string().optional().describe("Design category (if any)."),
+          category: z.string().nullable().describe("Design category (if any)."),
           attributes: z
             .record(z.any())
-            .optional()
+            .nullable()
             .describe("Additional tags/props; may be empty."),
         }),
         templates: z
@@ -44,6 +53,10 @@ export function registerListRenderableItems(server: McpServer) {
       description: `
 Return all projects and design templates the authenticated user can render. Each item includes a lightweight preview of its templates or variants with name, aspect ratio, duration, description, and metadata (tags, category, attributes).
 
+Inputs:
+- excludeDesigns (boolean, optional): If true, exclude designs from the results.
+- excludeProjects (boolean, optional): If true, exclude projects from the results.
+
 Filtering guidance:
 - Use metadata.tags, metadata.category, metadata.attributes, and description to find templates relevant to the user's request (e.g., social ads, Instagram, e-commerce).
 - Do not use aspect ratio or duration for filtering.
@@ -62,32 +75,11 @@ Follow-ups:
       inputSchema: Input,
       outputSchema: Output,
     },
-    async () => {
-      const apiItems = await listRenderableItems();
-
-      const items = (apiItems ?? []).map((x: any) => ({
-        id: String(x.id),
-        name: String(x.name),
-        description: String(x.description ?? ""),
-        isDesign: Boolean(x.isDesign),
-
-        metadata: {
-          category:
-            typeof x?.metadata?.category === "string"
-              ? x.metadata.category
-              : undefined,
-          attributes: asPlainObject(x?.metadata?.attributes),
-        },
-
-        templates: (Array.isArray(x.templates) ? x.templates : []).map(
-          (t: RenderableTemplate) => ({
-            id: String(t.id),
-            name: String(t.name),
-            aspectRatio: String(t.aspectRatio ?? ""),
-            durationSeconds: Number(t.duration ?? 0),
-          })
-        ),
-      }));
+    async ({ excludeDesigns, excludeProjects }) => {
+      const items = await listRenderableItems({
+        excludeDesigns,
+        excludeProjects,
+      });
 
       return {
         content: [{ type: "text", text: JSON.stringify(items) }],

@@ -41,8 +41,8 @@ export type Project = {
 export type RenderableTemplate = {
   id: string;
   name: string;
-  aspectRatio: AspectRatio;
-  duration: number;
+  aspectRatio: AspectRatio | null;
+  durationSeconds: number;
 };
 
 export type RenderableItem = {
@@ -51,8 +51,8 @@ export type RenderableItem = {
   name: string;
   description: string | null;
   metadata: {
-    category?: string;
-    attributes?: { [key: string]: any };
+    category: string | null;
+    attributes: { [key: string]: any } | null;
   };
   templates: RenderableTemplate[];
 };
