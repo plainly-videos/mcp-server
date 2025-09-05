@@ -1,6 +1,6 @@
-import { createAxiosInstance } from "../axiosConfig";
-import { getAspectRatio } from "../utils/aspectRatio";
-import { Design, Project, RenderableItem } from "./types";
+import { createAxiosInstance } from "../../axiosConfig";
+import { getAspectRatio } from "../../utils/aspectRatio";
+import { Design, Project, RenderableItem } from "../types";
 
 const api = createAxiosInstance();
 

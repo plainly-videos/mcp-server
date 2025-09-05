@@ -14,36 +14,43 @@ export function registerListRenderableItems(server: McpServer) {
       .describe("If true, excludes projects from the results."),
   };
   const Output = {
-    items: z.array(
-      z.object({
-        isDesign: z
-          .boolean()
-          .describe("True if source is a Design; false if a Project."),
-        id: z.string().describe("Project/design id (projectId or designId)."),
-        name: z.string().describe("Project/design display name."),
-        description: z
-          .string()
-          .nullable()
-          .describe("Short description of the project/design."),
-        metadata: z.object({
-          category: z.string().nullable().describe("Design category (if any)."),
-          attributes: z
-            .record(z.any())
+    items: z
+      .array(
+        z.object({
+          isDesign: z
+            .boolean()
+            .describe("True if item is a Design; false if a Project."),
+          id: z.string().describe("Project/design id."),
+          name: z.string().describe("Project/design display name."),
+          description: z
+            .string()
             .nullable()
-            .describe("Additional tags/props; may be empty."),
-        }),
-        templates: z
-          .array(
-            z.object({
-              id: z.string().describe("Template/variant id (renderable leaf)."),
-              name: z.string().describe("Template/variant display name."),
-              aspectRatio: z.string().describe("e.g., '16:9', '1:1', etc."),
-              durationSeconds: z.number().describe("Duration in seconds."),
-            })
-          )
-          .describe("Lightweight preview of renderable leaf options."),
-      })
-    ),
+            .describe("Short description of the project/design."),
+          metadata: z.object({
+            category: z
+              .string()
+              .nullable()
+              .describe("Design category (if any)."),
+            attributes: z
+              .record(z.any())
+              .nullable()
+              .describe("Additional tags/props; may be empty."),
+          }),
+          templates: z
+            .array(
+              z.object({
+                id: z
+                  .string()
+                  .describe("Template/variant id (renderable leaf)."),
+                name: z.string().describe("Template/variant display name."),
+                aspectRatio: z.string().describe("e.g., '16:9', '1:1', etc."),
+                durationSeconds: z.number().describe("Duration in seconds."),
+              })
+            )
+            .describe("Lightweight preview of renderable leaf options."),
+        })
+      )
+      .describe("List of renderable items."),
   };
 
   server.registerTool(
