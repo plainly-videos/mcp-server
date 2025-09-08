@@ -7,11 +7,11 @@ export function registerListRenderableItems(server: McpServer) {
     excludeDesigns: z
       .boolean()
       .optional()
-      .describe("If true, exclude designs from the results."),
+      .describe("If true, excludes designs from the results."),
     excludeProjects: z
       .boolean()
       .optional()
-      .describe("If true, exclude projects from the results."),
+      .describe("If true, excludes projects from the results."),
   };
   const Output = {
     items: z.array(
@@ -54,11 +54,11 @@ export function registerListRenderableItems(server: McpServer) {
 Return all projects and design templates the authenticated user can render. Each item includes a lightweight preview of its templates or variants with name, aspect ratio, duration, description, and metadata (tags, category, attributes).
 
 Inputs:
-- excludeDesigns (boolean, optional): If true, exclude designs from the results.
-- excludeProjects (boolean, optional): If true, exclude projects from the results.
+- excludeDesigns (boolean, optional): If true, excludes designs from the results.
+- excludeProjects (boolean, optional): If true, excludes projects from the results.
 
 Filtering guidance:
-- Use metadata.tags, metadata.category, metadata.attributes, and description to find templates relevant to the user's request (e.g., social ads, Instagram, e-commerce).
+- Use metadata.tags, metadata.category, metadata.attributes, name and description to find templates relevant to the user's request (e.g., social ads, Instagram, e-commerce).
 - Do not use aspect ratio or duration for filtering.
 - Do not guess or return unrelated templates.
 - If no template has metadata or description fields matching the user's request, respond clearly: "No suitable templates found."
