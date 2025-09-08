@@ -2,12 +2,23 @@ import { createAxiosInstance } from "../../axiosConfig";
 import {
   DesignDetails,
   Layer,
-  ParameterType,
   ProjectDetails,
   RenderableItemDetails,
+  RenderableItemParameterType,
 } from "../types";
 
 const api = createAxiosInstance();
+
+export const getRenderableItemsDetails = async (
+  renderableItemId: string,
+  isDesign: boolean
+): Promise<RenderableItemDetails[]> => {
+  if (isDesign) {
+    return await getDesignVariants(renderableItemId);
+  } else {
+    return await getProjectTemplates(renderableItemId);
+  }
+};
 
 const getDesignVariants = async (
   designId: string
@@ -23,24 +34,11 @@ const getDesignVariants = async (
     parameters: designDetails.parameters.map((param) => ({
       key: param.key,
       mandatory: !param.optional,
-      type: param.type,
+      type: getDesignParameterType(param.type),
       description: param.description,
       label: null,
     })),
   }));
-};
-
-const getLayerType = (layer: Layer): ParameterType => {
-  switch (layer.layerType) {
-    case "DATA":
-      return "STRING";
-    case "MEDIA":
-      return "MEDIA";
-    case "SOLID_COLOR":
-      return "COLOR";
-    default:
-      return "STRING"; // Fallback to STRING if unknown
-  }
 };
 
 const getProjectTemplates = async (
@@ -59,20 +57,35 @@ const getProjectTemplates = async (
     parameters: template.layers.map((layer) => ({
       key: layer.parametrization.value.replace("#", ""),
       mandatory: layer.parametrization.mandatory,
-      type: getLayerType(layer),
+      type: getProjectParameterType(layer),
       description: null,
       label: layer.label || null,
     })),
   }));
 };
 
-export const getRenderableItemsDetails = async (
-  renderableItemId: string,
-  isDesign: boolean
-): Promise<RenderableItemDetails[]> => {
-  if (isDesign) {
-    return await getDesignVariants(renderableItemId);
-  } else {
-    return await getProjectTemplates(renderableItemId);
+const getDesignParameterType = (type: string): RenderableItemParameterType => {
+  switch (type) {
+    case "STRING":
+      return "STRING";
+    case "MEDIA":
+      return "MEDIA"; // designs do not specify media type
+    case "COLOR":
+      return "COLOR";
+    default:
+      return "STRING"; // Fallback to STRING if unknown
+  }
+};
+
+const getProjectParameterType = (layer: Layer): RenderableItemParameterType => {
+  switch (layer.layerType) {
+    case "DATA":
+      return "STRING";
+    case "MEDIA":
+      return `MEDIA (${layer.mediaType})`; // specify media type
+    case "SOLID_COLOR":
+      return "COLOR";
+    default:
+      return "STRING"; // Fallback to STRING if unknown
   }
 };

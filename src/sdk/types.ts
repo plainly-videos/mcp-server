@@ -116,6 +116,14 @@ export type ProjectTemplateDetails = ProjectTemplate & {
 
 export type ProjectDetails = Project<ProjectTemplateDetails> & {};
 
+export type RenderableItemParameterType =
+  | "STRING"
+  | "MEDIA"
+  | "MEDIA (image)"
+  | "MEDIA (audio)"
+  | "MEDIA (video)"
+  | "COLOR";
+
 export type RenderableItemDetails = {
   isDesign: boolean;
   id: string;
@@ -124,7 +132,7 @@ export type RenderableItemDetails = {
     key: string;
     mandatory: boolean;
     // Used to understand what parameter changes in the video
-    type: ParameterType;
+    type: RenderableItemParameterType;
     description: string | null;
     label: string | null;
   }[];
