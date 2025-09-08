@@ -22,7 +22,7 @@ const getDesignVariants = async (
     variantId: variant.id,
     parameters: designDetails.parameters.map((param) => ({
       key: param.key,
-      isMandatory: !param.optional,
+      mandatory: !param.optional,
       type: param.type,
       description: param.description,
       label: null,
@@ -58,7 +58,7 @@ const getProjectTemplates = async (
     variantId: template.id,
     parameters: template.layers.map((layer) => ({
       key: layer.parametrization.value.replace("#", ""),
-      isMandatory: layer.parametrization.mandatory,
+      mandatory: layer.parametrization.mandatory,
       type: getLayerType(layer),
       description: null,
       label: layer.label || null,

@@ -100,9 +100,7 @@ type AbstractLayer<T extends LayerType> = {
   parametrization: Parametrization;
 };
 
-type DataLayer = AbstractLayer<LayerType.DATA> & {
-  propertyName: "Source Text";
-};
+type DataLayer = AbstractLayer<LayerType.DATA>;
 
 type MediaLayer = AbstractLayer<LayerType.MEDIA> & {
   mediaType: "image" | "video" | "audio";
@@ -124,7 +122,7 @@ export type RenderableItemDetails = {
   variantId: string;
   parameters: {
     key: string;
-    isMandatory: boolean;
+    mandatory: boolean;
     // Used to understand what parameter changes in the video
     type: ParameterType;
     description: string | null;

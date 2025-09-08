@@ -22,7 +22,7 @@ export function registerGetRenderableItemDetails(server: McpServer) {
             .array(
               z.object({
                 key: z.string().describe("Parameter key."),
-                isMandatory: z
+                mandatory: z
                   .boolean()
                   .describe("Whether the parameter is mandatory."),
                 type: z
