@@ -5,6 +5,7 @@ export type DesignVariant = {
   name: string;
   aspectRatio: AspectRatio;
   duration: number;
+  examples: { [key: string]: { videoUrl: string } };
 };
 
 export type ProjectTemplate = {
@@ -128,6 +129,7 @@ export type RenderableItemDetails = {
   isDesign: boolean;
   id: string;
   variantId: string;
+  videoUrl?: string;
   parameters: {
     key: string;
     mandatory: boolean;

@@ -32,6 +32,14 @@ export function registerGetRenderableItemDetails(server: McpServer) {
             .describe(
               "Template/variant identifier (the renderable leaf under the parent)."
             ),
+          videoUrl: z
+            .string()
+            .url()
+            .optional()
+            .describe(
+              "Public preview video URL (usually MP4) if available for this template/variant."
+            ),
+
           parameters: z
             .array(
               z.object({

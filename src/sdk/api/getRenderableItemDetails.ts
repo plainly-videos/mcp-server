@@ -1,6 +1,7 @@
 import { createAxiosInstance } from "../../axiosConfig";
 import {
   DesignDetails,
+  DesignVariant,
   Layer,
   ProjectDetails,
   RenderableItemDetails,
@@ -31,6 +32,7 @@ const getDesignVariants = async (
     isDesign: true,
     id: designDetails.id,
     variantId: variant.id,
+    videoUrl: getVideoUrl(variant),
     parameters: designDetails.parameters.map((param) => ({
       key: param.key,
       mandatory: !param.optional,
@@ -62,6 +64,21 @@ const getProjectTemplates = async (
       label: layer.label || null,
     })),
   }));
+};
+
+const getVideoUrl = (variant: DesignVariant): string | undefined => {
+  const allVariantExamples = Object.values(variant.examples || {});
+  if (allVariantExamples.length === 0) {
+    return undefined;
+  }
+
+  // Find the first example with a videoUrl
+  const videoExample = allVariantExamples.find((example) => example.videoUrl);
+  if (videoExample) {
+    return videoExample.videoUrl;
+  }
+
+  return undefined;
 };
 
 const getDesignParameterType = (type: string): RenderableItemParameterType => {
