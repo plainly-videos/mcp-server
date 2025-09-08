@@ -24,10 +24,10 @@ export function registerGetRenderableItemDetails(server: McpServer) {
             .describe(
               "True when the parent is a Design; false when it is a Project."
             ),
-          id: z
+          projectDesignId: z
             .string()
             .describe("Parent identifier echoed back (projectId or designId)."),
-          variantId: z
+          templateVariantId: z
             .string()
             .describe(
               "Template/variant identifier (the renderable leaf under the parent)."

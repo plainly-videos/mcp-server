@@ -30,9 +30,9 @@ const getDesignVariants = async (
   // flatten variants into renderable items with parameter details
   return designDetails.variants.map((variant) => ({
     isDesign: true,
-    id: designDetails.id,
-    variantId: variant.id,
-    videoUrl: getVideoUrl(variant),
+    projectDesignId: designDetails.id,
+    templateVariantId: variant.id,
+    exampleVideoUrl: getExampleVideoUrl(variant),
     parameters: designDetails.parameters.map((param) => ({
       key: param.key,
       mandatory: !param.optional,
@@ -54,8 +54,8 @@ const getProjectTemplates = async (
   // flatten templates into renderable items with parameter details
   return projectDetails.templates.map((template) => ({
     isDesign: false,
-    id: projectDetails.id,
-    variantId: template.id,
+    projectDesignId: projectDetails.id,
+    templateVariantId: template.id,
     parameters: template.layers.filter(isLayerParametrized).map((layer) => ({
       key: layer.parametrization.value.replace("#", ""),
       mandatory: layer.parametrization.mandatory,
@@ -74,7 +74,7 @@ const isLayerParametrized = (
   return layer.parametrization != null;
 };
 
-const getVideoUrl = (variant: DesignVariant): string | undefined => {
+const getExampleVideoUrl = (variant: DesignVariant): string | undefined => {
   const allVariantExamples = Object.values(variant.examples || {});
   if (allVariantExamples.length === 0) {
     return undefined;

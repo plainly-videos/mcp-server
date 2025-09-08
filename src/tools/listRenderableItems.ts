@@ -84,7 +84,11 @@ export function registerListRenderableItems(server: McpServer) {
     {
       title: "List Renderable Items",
       description: `
-Return all Projects and Designs the authenticated user can render. Each item includes a lightweight preview of its templates/variants (name, aspect ratio, duration) plus a parent-level description and metadata (tags, category, attributes).
+Return all Projects and Designs the authenticated user can render.
+Designs are pre-made projects with variants available for all users.
+Projects are created and maintained by the user, and may have custom templates.
+
+Each item includes a lightweight preview of its templates/variants (name, aspect ratio, duration) plus a parent-level description and metadata (tags, category, attributes).
 
 Filtering guidance (semantic first):
 - First, determine relevance using: metadata.tags, metadata.category, metadata.attributes, description, and name.

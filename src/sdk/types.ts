@@ -127,9 +127,9 @@ export type RenderableItemParameterType =
 
 export type RenderableItemDetails = {
   isDesign: boolean;
-  id: string;
-  variantId: string;
-  videoUrl?: string;
+  projectDesignId: string;
+  templateVariantId: string;
+  exampleVideoUrl?: string;
   parameters: {
     key: string;
     mandatory: boolean;
