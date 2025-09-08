@@ -98,7 +98,7 @@ type AbstractLayer<T extends LayerType> = {
   internalId: string;
   label?: string;
   layerName: string;
-  parametrization: Parametrization;
+  parametrization?: Parametrization;
 };
 
 type DataLayer = AbstractLayer<LayerType.DATA>;

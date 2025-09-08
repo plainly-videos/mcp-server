@@ -56,7 +56,7 @@ const getProjectTemplates = async (
     isDesign: false,
     id: projectDetails.id,
     variantId: template.id,
-    parameters: template.layers.map((layer) => ({
+    parameters: template.layers.filter(isLayerParametrized).map((layer) => ({
       key: layer.parametrization.value.replace("#", ""),
       mandatory: layer.parametrization.mandatory,
       type: getProjectParameterType(layer),
@@ -64,6 +64,14 @@ const getProjectTemplates = async (
       label: layer.label || null,
     })),
   }));
+};
+
+const isLayerParametrized = (
+  layer: Layer
+): layer is Layer & {
+  parametrization: { value: string; mandatory: boolean };
+} => {
+  return layer.parametrization != null;
 };
 
 const getVideoUrl = (variant: DesignVariant): string | undefined => {
