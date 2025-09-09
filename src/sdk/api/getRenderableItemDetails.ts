@@ -39,6 +39,7 @@ const getDesignVariants = async (
       type: getDesignParameterType(param.type),
       description: param.description,
       label: null,
+      defaultValue: param.defaultValue || null,
     })),
   }));
 };
@@ -62,6 +63,7 @@ const getProjectTemplates = async (
       type: getProjectParameterType(layer),
       description: null,
       label: layer.label || null,
+      defaultValue: layer.parametrization.defaultValue || null,
     })),
   }));
 };

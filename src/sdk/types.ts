@@ -137,5 +137,6 @@ export type RenderableItemDetails = {
     type: RenderableItemParameterType;
     description: string | null;
     label: string | null;
+    defaultValue?: any | null;
   }[];
 };
