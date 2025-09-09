@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { renderItem } from "../sdk";
+import { getRenderableItemsDetails, renderItem } from "../sdk";
 
 export function registerRenderItem(server: McpServer) {
   const Input = {
@@ -21,7 +21,7 @@ export function registerRenderItem(server: McpServer) {
       .record(z.any())
       .default({})
       .describe(
-        "Key-value parameters required by the chosen template/variant. Mandatory parameters must be provided."
+        "Key-value parameters required by the chosen template/variant to customize the render. Mandatory parameters must be provided. Parameter type must be respected."
       ),
   };
 
@@ -54,16 +54,98 @@ export function registerRenderItem(server: McpServer) {
     {
       title: "Render Item",
       description: `
-Create a render for a selected Project template or Design variant.
+Create a render for a selected Project template or Design variant with specified parameters.
+
+How to use:
+- Call this after the user selects a candidate from \`get_renderable_items_details\`.
+- Call this only once the user approved all parameters for the chosen template/variant.
+
+Guidance:
+- Use parameters to customize the render.
+- All mandatory parameters must be provided.
+- Parameter types must be respected:
+      - STRING: text string relevant to the parameter context.
+      - MEDIA: URL to a media file (image, audio, or video). Ensure the URL is publicly accessible and points directly to the media file.
+      - MEDIA (image): URL to an image file (jpg, png, etc.).
+      - MEDIA (audio): URL to an audio file (mp3, wav, etc.).
+      - MEDIA (video): URL to a video file (mp4, mov, etc.).
+      - COLOR: hex color code (e.g. #FF5733).
+- If a parameter has a default value and the user does not provide a value, the default will be used.
+- If the user is unsure about a parameter, ask for clarification rather than guessing.
+- When referencing parameters in conversation, use their \`label\` or \`description\` for clarity.
 
 Use when:
-- The user has confirmed a specific template/variant and provided all mandatory parameters.
+- The user wants to create a video from a specific template/variant with defined parameters.
       `,
       inputSchema: Input,
       outputSchema: Output,
     },
     async ({ isDesign, projectDesignId, templateVariantId, parameters }) => {
+      // TODO: Handle object parameters "my.parameter.x"
+
       try {
+        // Validate that the chosen project / design exists
+        const projectDesignItems = await getRenderableItemsDetails(
+          projectDesignId,
+          isDesign
+        );
+
+        if (projectDesignItems.length === 0) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Could not find a ${
+                  isDesign ? "design" : "project"
+                } with id ${projectDesignId} .`,
+              },
+            ],
+          };
+        }
+
+        // Validate that the chosen template / variant exists
+        const renderableItem = projectDesignItems.find(
+          (item) => item.templateVariantId === templateVariantId
+        );
+
+        if (!renderableItem) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Could not find a ${
+                  isDesign ? "variant" : "template"
+                } with id ${templateVariantId} under the specified ${
+                  isDesign ? "design" : "project"
+                } (${projectDesignId}).`,
+              },
+            ],
+          };
+        }
+
+        // Validate parameters
+        const mandatoryParams = renderableItem.parameters.filter(
+          (p) => p.mandatory
+        );
+        const providedParams = Object.keys(parameters);
+        const missingParams = mandatoryParams.filter(
+          (p) => !providedParams.includes(p.key)
+        );
+
+        if (missingParams.length > 0) {
+          return {
+            content: [
+              {
+                type: "text",
+                text: `Missing required parameters: ${missingParams
+                  .map((p) => p.key)
+                  .join(", ")}.`,
+              },
+            ],
+          };
+        }
+
+        // If everything looks good, submit the render
         const render = await renderItem({
           isDesign,
           projectDesignId,
@@ -75,10 +157,20 @@ Use when:
           content: [
             {
               type: "text",
-              text: `Render created successfully with ID: ${render.id}.`,
+              text: `🚀 Render submitted successfully!
+
+**Render ID:** ${render.id}
+**Parameters Used:**
+${Object.entries(parameters)
+  .map(([key, value]) => {
+    const param = renderableItem.parameters.find((p) => p.key === key);
+    return `• ${param?.label || key}: ${value}`;
+  })
+  .join("\n")}
+
+The render is being processed. Use the render ID to check status and retrieve the final video when complete.`,
             },
           ],
-          structuredContent: render,
         };
       } catch (err: any) {
         // Handle API errors gracefully
