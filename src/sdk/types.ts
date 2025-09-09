@@ -5,6 +5,7 @@ export type DesignVariant = {
   name: string;
   aspectRatio: AspectRatio;
   duration: number;
+  examples: { [key: string]: { videoUrl: string } };
 };
 
 export type ProjectTemplate = {
@@ -17,16 +18,16 @@ export type ProjectTemplate = {
   };
 };
 
-export type Design = {
+export type Design<V extends DesignVariant = DesignVariant> = {
   id: string;
   name: string;
   description: string;
   category: string;
   renderUiDisabled: boolean;
-  variants: DesignVariant[];
+  variants: V[];
 };
 
-export type Project = {
+export type Project<T extends ProjectTemplate = ProjectTemplate> = {
   id: string;
   name: string;
   description: string | null;
@@ -35,7 +36,7 @@ export type Project = {
     tags?: string[];
     folder?: string;
   };
-  templates: ProjectTemplate[];
+  templates: T[];
 };
 
 export type RenderableTemplate = {
@@ -55,4 +56,87 @@ export type RenderableItem = {
     attributes: { [key: string]: any } | null;
   };
   templates: RenderableTemplate[];
+};
+
+export type ParameterType =
+  | "STRING"
+  | "MEDIA"
+  | "COLOR"
+  | "NUMBER"
+  | "BOOLEAN"
+  | "COMPLEX";
+
+export type DesignVariantDetails = DesignVariant & {};
+
+export type DesignDetails = Design<DesignVariantDetails> & {
+  parameters: {
+    key: string;
+    type: ParameterType;
+    name: string;
+    description: string;
+    optional: boolean;
+    defaultValue: any;
+    sampleValue: any;
+  }[];
+};
+
+enum LayerType {
+  DATA = "DATA",
+  MEDIA = "MEDIA",
+  SOLID_COLOR = "SOLID_COLOR",
+}
+
+type Parametrization = {
+  value: string;
+  defaultValue?: string;
+  expression: boolean;
+  mandatory: boolean;
+};
+
+type AbstractLayer<T extends LayerType> = {
+  layerType: T;
+  internalId: string;
+  label?: string;
+  layerName: string;
+  parametrization?: Parametrization;
+};
+
+type DataLayer = AbstractLayer<LayerType.DATA>;
+
+type MediaLayer = AbstractLayer<LayerType.MEDIA> & {
+  mediaType: "image" | "video" | "audio";
+};
+
+type SolidColorLayer = AbstractLayer<LayerType.SOLID_COLOR>;
+
+export type Layer = DataLayer | MediaLayer | SolidColorLayer;
+
+export type ProjectTemplateDetails = ProjectTemplate & {
+  layers: Layer[];
+};
+
+export type ProjectDetails = Project<ProjectTemplateDetails> & {};
+
+export type RenderableItemParameterType =
+  | "STRING"
+  | "MEDIA"
+  | "MEDIA (image)"
+  | "MEDIA (audio)"
+  | "MEDIA (video)"
+  | "COLOR";
+
+export type RenderableItemDetails = {
+  isDesign: boolean;
+  projectDesignId: string;
+  templateVariantId: string;
+  exampleVideoUrl?: string;
+  parameters: {
+    key: string;
+    mandatory: boolean;
+    // Used to understand what parameter changes in the video
+    type: RenderableItemParameterType;
+    description: string | null;
+    label: string | null;
+    defaultValue?: any | null;
+  }[];
 };

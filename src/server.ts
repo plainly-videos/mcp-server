@@ -1,6 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { registerListRenderableItems } from "./tools/listRenderableItems";
+import {
+  registerListRenderableItems,
+  registerGetRenderableItemDetails,
+} from "./tools";
 
 export class PlainlyMcpServer {
   server: McpServer;
@@ -15,6 +18,7 @@ export class PlainlyMcpServer {
 
     // Register tools
     registerListRenderableItems(this.server);
+    registerGetRenderableItemDetails(this.server);
   }
 
   async start() {
