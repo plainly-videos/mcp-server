@@ -63,6 +63,7 @@ How to use:
 Guidance:
 - Use parameters to customize the render.
 - All mandatory parameters must be provided.
+- Provide values for optional parameters if it makes sense.
 - Parameter types must be respected:
       - STRING: text string relevant to the parameter context.
       - MEDIA: URL to a media file (image, audio, or video). Ensure the URL is publicly accessible and points directly to the media file.
@@ -171,6 +172,12 @@ ${Object.entries(parameters)
 The render is being processed. Use the render ID to check status and retrieve the final video when complete.`,
             },
           ],
+          structuredContent: {
+            id: render.id,
+            state: render.state ?? "QUEUED",
+            output: render.output ?? null,
+            error: null,
+          },
         };
       } catch (err: any) {
         // Handle API errors gracefully
