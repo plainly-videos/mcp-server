@@ -26,7 +26,7 @@ export function registerRenderItem(server: McpServer) {
   };
 
   const Output = {
-    id: z.string().describe("Server-assigned render job ID."),
+    id: z.string().optional().describe("Server-assigned render job ID."),
     state: z
       .enum([
         "PENDING",
@@ -38,14 +38,17 @@ export function registerRenderItem(server: McpServer) {
         "INVALID",
         "CANCELLED",
       ])
+      .optional()
       .describe("Current state of the render job."),
     output: z
       .string()
       .nullable()
+      .optional()
       .describe("URL to the rendered video, if state is DONE."),
     error: z
       .record(z.any())
       .nullable()
+      .optional()
       .describe("Error details, if state is FAILED or INVALID."),
   };
 
@@ -121,6 +124,8 @@ Use when:
                 } (${projectDesignId}).`,
               },
             ],
+            structuredContent: {},
+            isError: true,
           };
         }
 
@@ -143,6 +148,8 @@ Use when:
                   .join(", ")}.`,
               },
             ],
+            structuredContent: {},
+            isError: true,
           };
         }
 
@@ -188,7 +195,8 @@ The render is being processed. Use the render ID to check status and retrieve th
               text: `Failed to create render: ${err}`,
             },
           ],
-          structuredContent: err,
+          structuredContent: {},
+          isError: true,
         };
       }
     }
