@@ -162,6 +162,13 @@ export type ProjectRenderDto = AbstractRenderDto & {
   templateId: string;
 };
 
+export type ParametrizationResult = {
+  parametrization?: Parametrization;
+  mandatoryNotResolved: boolean;
+  fatalError: boolean;
+  errorMessages?: string[];
+};
+
 export type Render = {
   id: string;
   publicDesign: boolean;
@@ -173,4 +180,5 @@ export type Render = {
   projectName: string;
   templateName: string;
   error: { [key: string]: string | object };
+  parametrizationResults: ParametrizationResult[];
 };

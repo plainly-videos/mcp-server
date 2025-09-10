@@ -1,6 +1,18 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { getRenderableItemsDetails, renderItem } from "../sdk";
+import {
+  getRenderableItemsDetails,
+  RenderableItemDetails,
+  renderItem,
+} from "../sdk";
+import {
+  GeneralRenderError,
+  InvalidRenderError,
+  MissingParametersError,
+  PlainlyMcpServerError,
+  ProjectDesignNotFoundError,
+  TemplateVariantNotFoundError,
+} from "./errors";
 
 export function registerRenderItem(server: McpServer) {
   const Input = {
@@ -19,37 +31,24 @@ export function registerRenderItem(server: McpServer) {
       ),
     parameters: z
       .record(z.any())
-      .default({})
       .describe(
         "Key-value parameters required by the chosen template/variant to customize the render. Mandatory parameters must be provided. Parameter type must be respected."
       ),
   };
 
   const Output = {
+    // Successful response
     id: z.string().optional().describe("Server-assigned render job ID."),
-    state: z
-      .enum([
-        "PENDING",
-        "THROTTLED",
-        "QUEUED",
-        "IN_PROGRESS",
-        "DONE",
-        "FAILED",
-        "INVALID",
-        "CANCELLED",
-      ])
-      .optional()
-      .describe("Current state of the render job."),
+    state: z.string().optional().describe("Current state of the render job."),
     output: z
       .string()
       .nullable()
       .optional()
       .describe("URL to the rendered video, if state is DONE."),
-    error: z
-      .record(z.any())
-      .nullable()
-      .optional()
-      .describe("Error details, if state is FAILED or INVALID."),
+    // Failure response
+    errorMessage: z.string().optional().describe("Error message, if any."),
+    errorSolution: z.string().optional().describe("Error solution, if any."),
+    errorDetails: z.string().optional().describe("Error details, if any."),
   };
 
   server.registerTool(
@@ -88,70 +87,17 @@ Use when:
       // TODO: Handle object parameters "my.parameter.x"
 
       try {
-        // Validate that the chosen project / design exists
-        const projectDesignItems = await getRenderableItemsDetails(
-          projectDesignId,
-          isDesign
+        const projectDesignItems = await validateProjectDesignExists(
+          isDesign,
+          projectDesignId
         );
 
-        if (projectDesignItems.length === 0) {
-          return {
-            content: [
-              {
-                type: "text",
-                text: `Could not find a ${
-                  isDesign ? "design" : "project"
-                } with id ${projectDesignId} .`,
-              },
-            ],
-          };
-        }
-
-        // Validate that the chosen template / variant exists
-        const renderableItem = projectDesignItems.find(
-          (item) => item.templateVariantId === templateVariantId
+        const renderableItem = await validateTemplateVariantExists(
+          projectDesignItems,
+          templateVariantId
         );
 
-        if (!renderableItem) {
-          return {
-            content: [
-              {
-                type: "text",
-                text: `Could not find a ${
-                  isDesign ? "variant" : "template"
-                } with id ${templateVariantId} under the specified ${
-                  isDesign ? "design" : "project"
-                } (${projectDesignId}).`,
-              },
-            ],
-            structuredContent: {},
-            isError: true,
-          };
-        }
-
-        // Validate parameters
-        const mandatoryParams = renderableItem.parameters.filter(
-          (p) => p.mandatory
-        );
-        const providedParams = Object.keys(parameters);
-        const missingParams = mandatoryParams.filter(
-          (p) => !providedParams.includes(p.key)
-        );
-
-        if (missingParams.length > 0) {
-          return {
-            content: [
-              {
-                type: "text",
-                text: `Missing required parameters: ${missingParams
-                  .map((p) => p.key)
-                  .join(", ")}.`,
-              },
-            ],
-            structuredContent: {},
-            isError: true,
-          };
-        }
+        await validateTemplateVariantParameters(renderableItem, parameters);
 
         // If everything looks good, submit the render
         const render = await renderItem({
@@ -161,22 +107,40 @@ Use when:
           parameters,
         });
 
+        // Check for API-level errors
+        if (render.error) {
+          // Specific handling for invalid renders
+          if (render.state === "INVALID") {
+            const invalidParams: { key?: string; errors: string[] }[] = [];
+
+            render.parametrizationResults
+              .filter((r) => r.mandatoryNotResolved || r.fatalError)
+              .forEach((r) => {
+                invalidParams.push({
+                  key: r.parametrization?.value,
+                  errors: r.errorMessages ?? [],
+                });
+              });
+
+            throw new InvalidRenderError(
+              `${render.error.message || ""}`,
+              invalidParams
+            );
+          }
+
+          // General error
+          throw new GeneralRenderError(
+            `${render.error.message || ""}`,
+            render.error
+          );
+        }
+
+        // Successful submission
         return {
           content: [
             {
               type: "text",
-              text: `🚀 Render submitted successfully!
-
-**Render ID:** ${render.id}
-**Parameters Used:**
-${Object.entries(parameters)
-  .map(([key, value]) => {
-    const param = renderableItem.parameters.find((p) => p.key === key);
-    return `• ${param?.label || key}: ${value}`;
-  })
-  .join("\n")}
-
-The render is being processed. Use the render ID to check status and retrieve the final video when complete.`,
+              text: JSON.stringify(render),
             },
           ],
           structuredContent: {
@@ -187,18 +151,88 @@ The render is being processed. Use the render ID to check status and retrieve th
           },
         };
       } catch (err: any) {
-        // Handle API errors gracefully
+        // Known errors with specific handling
+        if (err instanceof PlainlyMcpServerError) {
+          const errorOutput = {
+            message: err.message,
+            solution: err.solution,
+            details: err.details,
+          };
+
+          return {
+            content: [
+              {
+                type: "text",
+                text: JSON.stringify(errorOutput),
+              },
+            ],
+            structuredContent: errorOutput,
+            isError: true,
+          };
+        }
+
+        // All other errors
         return {
           content: [
             {
               type: "text",
-              text: `Failed to create render: ${err}`,
+              text: JSON.stringify(err),
             },
           ],
-          structuredContent: {},
+          structuredContent: err,
           isError: true,
         };
       }
     }
   );
 }
+
+const validateProjectDesignExists = async (
+  isDesign: boolean,
+  projectDesignId: string
+): Promise<RenderableItemDetails[]> => {
+  const projectDesignItems = await getRenderableItemsDetails(
+    projectDesignId,
+    isDesign
+  );
+
+  if (projectDesignItems.length === 0) {
+    throw new ProjectDesignNotFoundError(projectDesignId);
+  }
+
+  return projectDesignItems;
+};
+const validateTemplateVariantExists = async (
+  projectDesignItems: RenderableItemDetails[],
+  templateVariantId: string
+): Promise<RenderableItemDetails> => {
+  const renderableItem = projectDesignItems.find(
+    (item) => item.templateVariantId === templateVariantId
+  );
+
+  if (!renderableItem) {
+    throw new TemplateVariantNotFoundError(
+      templateVariantId,
+      projectDesignItems[0].projectDesignId
+    );
+  }
+
+  return renderableItem;
+};
+
+const validateTemplateVariantParameters = async (
+  renderableItem: RenderableItemDetails,
+  parameters: Record<string, any>
+): Promise<void> => {
+  const mandatoryParams = renderableItem.parameters.filter((p) => p.mandatory);
+  const providedParams = Object.keys(parameters);
+  const missingParams = mandatoryParams.filter(
+    (p) => !providedParams.includes(p.key)
+  );
+
+  if (missingParams.length > 0) {
+    throw new MissingParametersError(
+      missingParams.map((p) => ({ key: p.key, label: p.label }))
+    );
+  }
+};
