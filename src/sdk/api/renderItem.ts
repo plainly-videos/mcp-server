@@ -1,6 +1,9 @@
 import { AxiosResponse } from "axios";
 import { createAxiosInstance } from "../../axiosConfig";
-import { DesignRenderDto, ProjectRenderDto, Render } from "../types";
+import { ProjectRenderDto, Render } from "../types";
+
+// get name and version from package.json
+import { name, version } from "../../../package.json";
 
 const api = createAxiosInstance();
 
@@ -12,28 +15,6 @@ type RenderParams = {
 };
 
 export const renderItem = async (params: RenderParams): Promise<Render> => {
-  if (params.isDesign) {
-    return await renderDesign(params);
-  } else {
-    return await renderProject(params);
-  }
-};
-
-const renderDesign = async (params: RenderParams): Promise<Render> => {
-  const response = await api.post<
-    Render,
-    AxiosResponse<Render>,
-    DesignRenderDto
-  >("/api/v2/designs", {
-    designId: params.projectDesignId,
-    variantId: params.templateVariantId,
-    parameters: params.parameters,
-  });
-
-  return response.data;
-};
-
-const renderProject = async (params: RenderParams): Promise<Render> => {
   const response = await api.post<
     Render,
     AxiosResponse<Render>,
@@ -42,6 +23,9 @@ const renderProject = async (params: RenderParams): Promise<Render> => {
     projectId: params.projectDesignId,
     templateId: params.templateVariantId,
     parameters: params.parameters,
+    attributes: {
+      [name]: version,
+    },
   });
 
   return response.data;

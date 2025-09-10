@@ -152,8 +152,19 @@ enum RenderState {
   CANCELLED = "CANCELLED",
 }
 
+export type AbstractRenderDto = {
+  parameters?: { [key: string]: any };
+  attributes?: { [key: string]: any };
+};
+
+export type ProjectRenderDto = AbstractRenderDto & {
+  projectId: string;
+  templateId: string;
+};
+
 export type Render = {
   id: string;
+  publicDesign: boolean;
   projectId: string;
   templateId: string;
   expirationDate?: string;
@@ -162,18 +173,4 @@ export type Render = {
   projectName: string;
   templateName: string;
   error: { [key: string]: string | object };
-};
-
-export type AbstractRenderDto = {
-  parameters?: { [key: string]: any };
-};
-
-export type ProjectRenderDto = AbstractRenderDto & {
-  projectId: string;
-  templateId: string;
-};
-
-export type DesignRenderDto = AbstractRenderDto & {
-  designId: string;
-  variantId: string;
 };
