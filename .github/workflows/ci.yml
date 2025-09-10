@@ -1,0 +1,20 @@
+name: Continuous integration
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  build-mcp-server:
+    name: Build MCP Server
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build
+        run: yarn build
