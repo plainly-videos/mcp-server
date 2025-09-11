@@ -38,13 +38,23 @@ export function registerRenderItem(server: McpServer) {
 
   const Output = {
     // Successful response
-    id: z.string().optional().describe("Server-assigned render job ID."),
-    state: z.string().optional().describe("Current state of the render job."),
-    output: z
+    renderId: z.string().optional().describe("Server-assigned render job ID."),
+    projectDesignId: z
       .string()
-      .nullable()
+      .describe("Parent identifier (projectId or designId)."),
+    templateVariantId: z
+      .string()
+      .describe(
+        "Template/variant identifier (the renderable leaf under the parent)."
+      ),
+    projectDesignName: z
+      .string()
       .optional()
-      .describe("URL to the rendered video, if state is DONE."),
+      .describe("Name of the project or design."),
+    templateVariantName: z
+      .string()
+      .optional()
+      .describe("Name of the template or variant."),
     // Failure response
     errorMessage: z.string().optional().describe("Error message, if any."),
     errorSolution: z.string().optional().describe("Error solution, if any."),
@@ -136,19 +146,21 @@ Use when:
         }
 
         // Successful submission
+        const output = {
+          renderId: render.id,
+          projectDesignId: render.projectId,
+          templateVariantId: render.templateId,
+          projectDesignName: render.projectName,
+          templateVariantName: render.templateName,
+        };
         return {
           content: [
             {
               type: "text",
-              text: JSON.stringify(render),
+              text: JSON.stringify(output),
             },
           ],
-          structuredContent: {
-            id: render.id,
-            state: render.state ?? "QUEUED",
-            output: render.output ?? null,
-            error: null,
-          },
+          structuredContent: output,
         };
       } catch (err: any) {
         // Known errors with specific handling
@@ -202,6 +214,7 @@ const validateProjectDesignExists = async (
 
   return projectDesignItems;
 };
+
 const validateTemplateVariantExists = async (
   projectDesignItems: RenderableItemDetails[],
   templateVariantId: string
