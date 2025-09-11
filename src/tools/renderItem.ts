@@ -82,7 +82,7 @@ Guidance:
       - MEDIA (image): URL to an image file (jpg, png, etc.).
       - MEDIA (audio): URL to an audio file (mp3, wav, etc.).
       - MEDIA (video): URL to a video file (mp4, mov, etc.).
-      - COLOR: hex color code (e.g. #FF5733).
+      - COLOR: hex color code (e.g. FF5733).
 - If a parameter has a default value and the user does not provide a value, the default will be used.
 - If the user is unsure about a parameter, ask for clarification rather than guessing.
 - When referencing parameters in conversation, use their \`label\` or \`description\` for clarity.
