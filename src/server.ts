@@ -4,6 +4,7 @@ import {
   registerListRenderableItems,
   registerGetRenderableItemDetails,
   registerRenderItem,
+  registerCheckRenderStatus,
 } from "./tools";
 
 export class PlainlyMcpServer {
@@ -21,6 +22,7 @@ export class PlainlyMcpServer {
     registerListRenderableItems(this.server);
     registerGetRenderableItemDetails(this.server);
     registerRenderItem(this.server);
+    registerCheckRenderStatus(this.server);
   }
 
   async start() {
