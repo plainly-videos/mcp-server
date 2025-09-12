@@ -39,6 +39,10 @@ export function registerRenderItem(server: McpServer) {
   const Output = {
     // Successful response
     renderId: z.string().optional().describe("Server-assigned render job ID."),
+    renderDetailsPageUrl: z
+      .string()
+      .optional()
+      .describe("URL to the render details page."),
     projectDesignId: z
       .string()
       .describe("Parent identifier (projectId or designId)."),
@@ -73,6 +77,7 @@ How to use:
 - Call this only once the user approved all parameters for the chosen template/variant.
 
 Guidance:
+- Never submit more than one render with the same parameters, unless the user explicitly requests it.
 - Use parameters to customize the render.
 - All mandatory parameters must be provided.
 - Provide values for optional parameters if it makes sense.
@@ -148,6 +153,7 @@ Use when:
         // Successful submission
         const output = {
           renderId: render.id,
+          renderDetailsPageUrl: `https://app.test.plainlyvideos.com/dashboard/renders/${render.id}`,
           projectDesignId: render.projectId,
           templateVariantId: render.templateId,
           projectDesignName: render.projectName,
