@@ -118,10 +118,11 @@ Use when:
           };
         }
 
+        // Processing
         return {
           content: [],
           structuredContent: {
-            message: "Render failed.",
+            message: "Render is processing. Please wait and check back later.",
             renderId: render.id,
             state: render.state,
             projectName: render.projectName,
