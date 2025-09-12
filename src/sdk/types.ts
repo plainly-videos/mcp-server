@@ -140,3 +140,45 @@ export type RenderableItemDetails = {
     defaultValue?: any | null;
   }[];
 };
+
+enum RenderState {
+  PENDING = "PENDING",
+  THROTTLED = "THROTTLED",
+  QUEUED = "QUEUED",
+  IN_PROGRESS = "IN_PROGRESS",
+  DONE = "DONE",
+  FAILED = "FAILED",
+  INVALID = "INVALID",
+  CANCELLED = "CANCELLED",
+}
+
+export type AbstractRenderDto = {
+  parameters?: { [key: string]: any };
+  attributes?: { [key: string]: any };
+};
+
+export type ProjectRenderDto = AbstractRenderDto & {
+  projectId: string;
+  templateId: string;
+};
+
+export type ParametrizationResult = {
+  parametrization?: Parametrization;
+  mandatoryNotResolved: boolean;
+  fatalError: boolean;
+  errorMessages?: string[];
+};
+
+export type Render = {
+  id: string;
+  publicDesign: boolean;
+  projectId: string;
+  templateId: string;
+  expirationDate?: string;
+  state: RenderState;
+  output?: string;
+  projectName: string;
+  templateName: string;
+  error: { [key: string]: string | object };
+  parametrizationResults: ParametrizationResult[];
+};

@@ -3,6 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
   registerListRenderableItems,
   registerGetRenderableItemDetails,
+  registerRenderItem,
 } from "./tools";
 
 export class PlainlyMcpServer {
@@ -19,6 +20,7 @@ export class PlainlyMcpServer {
     // Register tools
     registerListRenderableItems(this.server);
     registerGetRenderableItemDetails(this.server);
+    registerRenderItem(this.server);
   }
 
   async start() {
