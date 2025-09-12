@@ -24,7 +24,7 @@ export const renderItem = async (params: RenderParams): Promise<Render> => {
     templateId: params.templateVariantId,
     parameters: params.parameters,
     attributes: {
-      [name]: true,
+      [name]: "true",
     },
   });
 
