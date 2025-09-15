@@ -58,7 +58,7 @@ export function registerCheckRenderStatus(server: McpServer) {
     {
       title: "Check Render Status",
       description: `
-Check the status of a render job and optionally wait for completion.
+Check the status of a render job.
 
 Use when:
 - You need to check the progress of a render job
