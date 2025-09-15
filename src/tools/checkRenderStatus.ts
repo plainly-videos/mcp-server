@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getRenderItem } from "../sdk";
-import { PLAINLY_APP_URL } from "../constants";
+import env from "../env";
 
 export function registerCheckRenderStatus(server: McpServer) {
   const Input = {
@@ -11,15 +11,29 @@ export function registerCheckRenderStatus(server: McpServer) {
   };
 
   const Output = {
-    // Status information
-    message: z
-      .string()
-      .describe("A human-readable message for the render status."),
+    // Render information
+    message: z.string().describe("A message describing the render status."),
     renderId: z.string().describe("The render job ID."),
     renderDetailsPageUrl: z
       .string()
       .optional()
       .describe("URL to the render details page."),
+    projectDesignId: z
+      .string()
+      .describe("Parent identifier (projectId or designId)."),
+    templateVariantId: z
+      .string()
+      .describe(
+        "Template/variant identifier (the renderable leaf under the parent)."
+      ),
+    projectDesignName: z
+      .string()
+      .optional()
+      .describe("Name of the project or design."),
+    templateVariantName: z
+      .string()
+      .optional()
+      .describe("Name of the template or variant."),
     state: z
       .enum([
         "PENDING",
@@ -32,14 +46,6 @@ export function registerCheckRenderStatus(server: McpServer) {
         "CANCELLED",
       ])
       .describe("The current state of the render job."),
-    projectName: z
-      .string()
-      .optional()
-      .describe("Name of the project or design."),
-    templateName: z
-      .string()
-      .optional()
-      .describe("Name of the template or variant."),
 
     // Success output
     output: z
@@ -50,7 +56,7 @@ export function registerCheckRenderStatus(server: McpServer) {
     // Error information
     errorMessage: z.string().optional().describe("Error message, if any."),
     errorSolution: z.string().optional().describe("Error solution, if any."),
-    errorDetails: z.any().optional().describe("Error details, if any."),
+    errorDetails: z.string().optional().describe("Error details, if any."),
   };
 
   server.registerTool(
@@ -59,6 +65,22 @@ export function registerCheckRenderStatus(server: McpServer) {
       title: "Check Render Status",
       description: `
 Check the status of a render job.
+
+Available states:
+- PENDING: The render job has been created but not yet added to the queue.
+- THROTTLED: The render job is waiting due to rate limiting.
+- QUEUED: The render job is in the queue and will start soon.
+- IN_PROGRESS: The render job is currently being processed.
+- DONE: The render job has completed successfully. The output URL will be provided.
+- FAILED: The render job encountered an error and did not complete successfully. Error details will be provided.
+- INVALID: The render job was invalid (e.g., due to incorrect parameters). Error details will be provided.
+- CANCELLED: The render job was cancelled by the user.
+
+Response format:
+- Always include a link to the render details page.
+- If the render is still in progress (PENDING, THROTTLED, QUEUED, IN_PROGRESS) tell user to check the status again later.
+- If the render is DONE, return the output URL and the render page details.
+- If the render FAILED or is INVALID, return the error message and details.
 
 Use when:
 - You need to check the progress of a render job
@@ -79,10 +101,12 @@ Use when:
             structuredContent: {
               message: "Render completed successfully.",
               renderId: render.id,
-              renderDetailsPageUrl: `${PLAINLY_APP_URL}/dashboard/renders/${render.id}`,
+              renderDetailsPageUrl: `${env.PLAINLY_APP_URL}/dashboard/renders/${render.id}`,
+              projectDesignId: render.projectId,
+              templateVariantId: render.templateId,
+              projectDesignName: render.projectName,
+              templateVariantName: render.templateName,
               state: render.state,
-              projectName: render.projectName,
-              templateName: render.templateName,
               output: render.output,
             },
           };
@@ -94,9 +118,12 @@ Use when:
             structuredContent: {
               message: "Render was cancelled.",
               renderId: render.id,
+              renderDetailsPageUrl: `${env.PLAINLY_APP_URL}/dashboard/renders/${render.id}`,
+              projectDesignId: render.projectId,
+              templateVariantId: render.templateId,
+              projectDesignName: render.projectName,
+              templateVariantName: render.templateName,
               state: render.state,
-              projectName: render.projectName,
-              templateName: render.templateName,
             },
           };
         }
@@ -108,9 +135,12 @@ Use when:
             structuredContent: {
               message: "Render failed.",
               renderId: render.id,
+              renderDetailsPageUrl: `${env.PLAINLY_APP_URL}/dashboard/renders/${render.id}`,
+              projectDesignId: render.projectId,
+              templateVariantId: render.templateId,
+              projectDesignName: render.projectName,
+              templateVariantName: render.templateName,
               state: render.state,
-              projectName: render.projectName,
-              templateName: render.templateName,
               errorMessage: render.error.message,
               errorDetails: JSON.stringify(render.error.details),
             },
@@ -124,9 +154,12 @@ Use when:
           structuredContent: {
             message: "Render is processing. Please wait and check back later.",
             renderId: render.id,
+            renderDetailsPageUrl: `${env.PLAINLY_APP_URL}/dashboard/renders/${render.id}`,
+            projectDesignId: render.projectId,
+            templateVariantId: render.templateId,
+            projectDesignName: render.projectName,
+            templateVariantName: render.templateName,
             state: render.state,
-            projectName: render.projectName,
-            templateName: render.templateName,
           },
         };
       } catch (err: any) {
