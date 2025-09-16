@@ -13,6 +13,7 @@ import {
   ProjectDesignNotFoundError,
   TemplateVariantNotFoundError,
 } from "./errors";
+import env from "../env";
 
 export function registerRenderItem(server: McpServer) {
   const Input = {
@@ -153,7 +154,7 @@ Use when:
         // Successful submission
         const output = {
           renderId: render.id,
-          renderDetailsPageUrl: `https://app.test.plainlyvideos.com/dashboard/renders/${render.id}`,
+          renderDetailsPageUrl: `${env.PLAINLY_APP_URL}/dashboard/renders/${render.id}`,
           projectDesignId: render.projectId,
           templateVariantId: render.templateId,
           projectDesignName: render.projectName,
