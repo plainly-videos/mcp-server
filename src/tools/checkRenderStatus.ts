@@ -68,7 +68,7 @@ Check the status of a render job.
 
 Available states:
 - PENDING: The render job has been created but not yet added to the queue.
-- THROTTLED: The render job is waiting due to rate limiting.
+- THROTTLED: The render job is waiting due to rate limiting. It will be started as soon as a slot opens, no need for manual retries.
 - QUEUED: The render job is in the queue and will start soon.
 - IN_PROGRESS: The render job is currently being processed.
 - DONE: The render job has completed successfully. The output URL will be provided.
