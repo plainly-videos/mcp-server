@@ -1,20 +1,59 @@
-name: Continuous integration
+name: CI & Publish
 
 on:
   push:
     branches: [main, master]
+    tags:
+      - "v*" # publish when a tag starting with v is pushed (e.g., v1.0.0)
   pull_request:
 
 jobs:
-  build-mcp-server:
-    name: Build MCP Server
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - name: Checkout
+        uses: actions/checkout@v5
 
-      - name: Install dependencies
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: "yarn"
+
+      - name: Install
         run: yarn install --immutable
 
       - name: Build
         run: yarn build
+
+  publish:
+    name: Publish to npm
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v') # ensure this only runs on tag pushes
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Node (with npm auth)
+        uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+          cache: "yarn"
+          registry-url: "https://registry.npmjs.org"
+          always-auth: true
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install
+        run: yarn install --immutable
+
+      - name: Build
+        run: yarn build
+
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
