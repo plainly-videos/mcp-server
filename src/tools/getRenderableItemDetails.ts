@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getRenderableItemsDetails } from "../sdk";
+import { toToolResponse } from "../utils/toolResponse";
 
 export function registerGetRenderableItemDetails(server: McpServer) {
   const Input = {
@@ -124,10 +125,7 @@ Follow-ups:
         isDesign
       );
 
-      return {
-        content: [{ type: "text", text: JSON.stringify(itemDetails) }],
-        structuredContent: { itemDetails },
-      };
+      return toToolResponse({ itemDetails });
     }
   );
 }

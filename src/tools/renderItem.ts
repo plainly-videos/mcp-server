@@ -14,6 +14,7 @@ import {
   TemplateVariantNotFoundError,
 } from "./errors";
 import env from "../env";
+import { toToolResponse } from "../utils/toolResponse";
 
 export function registerRenderItem(server: McpServer) {
   const Input = {
@@ -152,55 +153,29 @@ Use when:
         }
 
         // Successful submission
-        const output = {
+        return toToolResponse({
           renderId: render.id,
           renderDetailsPageUrl: `${env.PLAINLY_APP_URL}/dashboard/renders/${render.id}`,
           projectDesignId: render.projectId,
           templateVariantId: render.templateId,
           projectDesignName: render.projectName,
           templateVariantName: render.templateName,
-        };
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(output),
-            },
-          ],
-          structuredContent: output,
-        };
+        });
       } catch (err: any) {
         // Known errors with specific handling
         if (err instanceof PlainlyMcpServerError) {
-          const errorOutput = {
-            message: err.message,
-            solution: err.solution,
-            details: err.details,
-          };
-
-          return {
-            content: [
-              {
-                type: "text",
-                text: JSON.stringify(errorOutput),
-              },
-            ],
-            structuredContent: errorOutput,
-            isError: true,
-          };
+          return toToolResponse(
+            {
+              message: err.message,
+              solution: err.solution,
+              details: err.details,
+            },
+            true
+          );
         }
 
         // All other errors
-        return {
-          content: [
-            {
-              type: "text",
-              text: JSON.stringify(err),
-            },
-          ],
-          structuredContent: err,
-          isError: true,
-        };
+        return toToolResponse(err, true);
       }
     }
   );
