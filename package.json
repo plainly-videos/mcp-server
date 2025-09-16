@@ -1,5 +1,5 @@
 {
-  "name": "plainly-mcp-server",
+  "name": "@plainly-videos/mcp-server",
   "version": "1.0.0",
   "description": "Plainly Videos MCP server for browsing designs/projects, and rendering videos.",
   "bin": "dist/index.js",
@@ -13,6 +13,7 @@
     "start": "node dist/index.js"
   },
   "author": "PlainlyVideos <contact@planlyvideos.com>",
+  "license": "MIT",
   "packageManager": "yarn@4.9.2",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",

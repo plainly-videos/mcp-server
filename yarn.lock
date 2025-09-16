@@ -259,6 +259,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@plainly-videos/mcp-server@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@plainly-videos/mcp-server@workspace:."
+  dependencies:
+    "@modelcontextprotocol/sdk": "npm:^1.0.4"
+    "@types/node": "npm:^22.10.6"
+    axios: "npm:^1.12.2"
+    typescript: "npm:^5.7.3"
+    vite: "npm:^6.3.6"
+    zod: "npm:^3.25.76"
+  bin:
+    mcp-server: dist/index.js
+  languageName: unknown
+  linkType: soft
+
 "@rollup/rollup-android-arm-eabi@npm:4.46.2":
   version: 4.46.2
   resolution: "@rollup/rollup-android-arm-eabi@npm:4.46.2"
@@ -1616,21 +1631,6 @@ __metadata:
   checksum: 10c0/c6706d627fdbb6f22bf8cc5d60d96d6b6a7bb481399b336a3d3f4e9bfba3e167a2c32f8ec0b5e74be686a0ba3bcc9894865d4c2dd1b91cea4c05dba1f28602c3
   languageName: node
   linkType: hard
-
-"plainly-mcp-server@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "plainly-mcp-server@workspace:."
-  dependencies:
-    "@modelcontextprotocol/sdk": "npm:^1.0.4"
-    "@types/node": "npm:^22.10.6"
-    axios: "npm:^1.12.2"
-    typescript: "npm:^5.7.3"
-    vite: "npm:^6.3.6"
-    zod: "npm:^3.25.76"
-  bin:
-    plainly-mcp-server: dist/index.js
-  languageName: unknown
-  linkType: soft
 
 "postcss@npm:^8.5.3":
   version: 8.5.6
