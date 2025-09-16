@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { getRenderItem } from "../sdk";
 import env from "../env";
+import { toToolResponse } from "../utils/toolResponse";
 
 export function registerCheckRenderStatus(server: McpServer) {
   const Input = {
@@ -96,43 +97,36 @@ Use when:
 
         // Handle successful completion
         if (render.state === "DONE") {
-          return {
-            content: [],
-            structuredContent: {
-              message: "Render completed successfully.",
-              renderId: render.id,
-              renderDetailsPageUrl: `${env.PLAINLY_APP_URL}/dashboard/renders/${render.id}`,
-              projectDesignId: render.projectId,
-              templateVariantId: render.templateId,
-              projectDesignName: render.projectName,
-              templateVariantName: render.templateName,
-              state: render.state,
-              output: render.output,
-            },
-          };
+          return toToolResponse({
+            message: "Render completed successfully.",
+            renderId: render.id,
+            renderDetailsPageUrl: `${env.PLAINLY_APP_URL}/dashboard/renders/${render.id}`,
+            projectDesignId: render.projectId,
+            templateVariantId: render.templateId,
+            projectDesignName: render.projectName,
+            templateVariantName: render.templateName,
+            state: render.state,
+            output: render.output,
+          });
         }
 
         if (render.state === "CANCELLED") {
-          return {
-            content: [],
-            structuredContent: {
-              message: "Render was cancelled.",
-              renderId: render.id,
-              renderDetailsPageUrl: `${env.PLAINLY_APP_URL}/dashboard/renders/${render.id}`,
-              projectDesignId: render.projectId,
-              templateVariantId: render.templateId,
-              projectDesignName: render.projectName,
-              templateVariantName: render.templateName,
-              state: render.state,
-            },
-          };
+          return toToolResponse({
+            message: "Render was cancelled.",
+            renderId: render.id,
+            renderDetailsPageUrl: `${env.PLAINLY_APP_URL}/dashboard/renders/${render.id}`,
+            projectDesignId: render.projectId,
+            templateVariantId: render.templateId,
+            projectDesignName: render.projectName,
+            templateVariantName: render.templateName,
+            state: render.state,
+          });
         }
 
         // Handle error states
         if (render.state === "FAILED" || render.state === "INVALID") {
-          return {
-            content: [],
-            structuredContent: {
+          return toToolResponse(
+            {
               message: "Render failed.",
               renderId: render.id,
               renderDetailsPageUrl: `${env.PLAINLY_APP_URL}/dashboard/renders/${render.id}`,
@@ -144,35 +138,31 @@ Use when:
               errorMessage: render.error.message,
               errorDetails: JSON.stringify(render.error.details),
             },
-            isError: true,
-          };
+            true
+          );
         }
 
         // Processing
-        return {
-          content: [],
-          structuredContent: {
-            message: "Render is processing. Please wait and check back later.",
-            renderId: render.id,
-            renderDetailsPageUrl: `${env.PLAINLY_APP_URL}/dashboard/renders/${render.id}`,
-            projectDesignId: render.projectId,
-            templateVariantId: render.templateId,
-            projectDesignName: render.projectName,
-            templateVariantName: render.templateName,
-            state: render.state,
-          },
-        };
+        return toToolResponse({
+          message: "Render is processing. Please wait and check back later.",
+          renderId: render.id,
+          renderDetailsPageUrl: `${env.PLAINLY_APP_URL}/dashboard/renders/${render.id}`,
+          projectDesignId: render.projectId,
+          templateVariantId: render.templateId,
+          projectDesignName: render.projectName,
+          templateVariantName: render.templateName,
+          state: render.state,
+        });
       } catch (err: any) {
-        return {
-          content: [],
-          structuredContent: {
+        return toToolResponse(
+          {
             message: "Render status could not be retrieved.",
             renderId,
             errorMessage: err.message || "Failed to check render status",
             errorDetails: err,
           },
-          isError: true,
-        };
+          true
+        );
       }
     }
   );
