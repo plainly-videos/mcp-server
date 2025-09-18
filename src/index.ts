@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { PlainlyMcpServer } from "./server";
 import env from "./env";
 

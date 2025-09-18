@@ -1,21 +1,42 @@
 {
-  "name": "plainly-mcp-server",
+  "name": "@plainly-videos/mcp-server",
   "version": "1.0.0",
-  "description": "MCP server for video generation platform",
-  "type": "module",
-  "main": "dist/index.js",
+  "description": "MCP server for Plainly Videos that allows browsing designs and projects, as well as rendering videos.",
+  "license": "MIT",
+  "author": "PlainlyVideos <contact@planlyvideos.com>",
+  "homepage": "https://plainlyvideos.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/plainly-videos/mcp-server.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "plainly",
+    "plainlyvideos",
+    "mcp",
+    "mcp-server",
+    "modelcontextprotocol",
+    "aftereffects",
+    "video-api",
+    "video-automation"
+  ],
+  "bin": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite build --watch",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
     "start": "node dist/index.js"
   },
-  "author": "Daniel Elero <danixeee@gmail.com>",
-  "license": "MIT",
   "packageManager": "yarn@4.9.2",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
-    "axios": "^1.12.2"
+    "axios": "^1.12.2",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^22.10.6",

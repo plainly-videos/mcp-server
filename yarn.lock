@@ -259,6 +259,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@plainly-videos/mcp-server@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@plainly-videos/mcp-server@workspace:."
+  dependencies:
+    "@modelcontextprotocol/sdk": "npm:^1.0.4"
+    "@types/node": "npm:^22.10.6"
+    axios: "npm:^1.12.2"
+    typescript: "npm:^5.7.3"
+    vite: "npm:^6.3.6"
+    zod: "npm:^3.25.76"
+  bin:
+    mcp-server: dist/index.js
+  languageName: unknown
+  linkType: soft
+
 "@rollup/rollup-android-arm-eabi@npm:4.46.2":
   version: 4.46.2
   resolution: "@rollup/rollup-android-arm-eabi@npm:4.46.2"
@@ -1617,18 +1632,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"plainly-mcp-server@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "plainly-mcp-server@workspace:."
-  dependencies:
-    "@modelcontextprotocol/sdk": "npm:^1.0.4"
-    "@types/node": "npm:^22.10.6"
-    axios: "npm:^1.12.2"
-    typescript: "npm:^5.7.3"
-    vite: "npm:^6.3.6"
-  languageName: unknown
-  linkType: soft
-
 "postcss@npm:^8.5.3":
   version: 8.5.6
   resolution: "postcss@npm:8.5.6"
@@ -2273,7 +2276,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.23.8":
+"zod@npm:^3.23.8, zod@npm:^3.25.76":
   version: 3.25.76
   resolution: "zod@npm:3.25.76"
   checksum: 10c0/5718ec35e3c40b600316c5b4c5e4976f7fee68151bc8f8d90ec18a469be9571f072e1bbaace10f1e85cf8892ea12d90821b200e980ab46916a6166a4260a983c
