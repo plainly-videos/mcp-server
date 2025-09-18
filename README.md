@@ -12,7 +12,7 @@ Implementation of MCP server for [Plainly](https://www.plainlyvideos.com/) in No
 
 ## 📋 Prerequisites
 
-- [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
+- [Node.js](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) **≥ 18** (required)
 - [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [Plainly Account](https://app.plainlyvideos.com)
 
