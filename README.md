@@ -30,8 +30,8 @@ Implementation of MCP server for [Plainly](https://www.plainlyvideos.com/) in No
 {
   "servers": {
     "plainly": {
-      "command": "npx",
-      "args": ["-y", "@plainly-videos/mcp-server@latest"],
+      "command": "yarn",
+      "args": ["dlx", "@plainly-videos/mcp-server@latest", "mcp-server"],
       "env": {
         "PLAINLY_API_KEY": "<PLAINLY_API_KEY>"
       }

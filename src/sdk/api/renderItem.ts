@@ -1,9 +1,7 @@
 import { AxiosResponse } from "axios";
 import { createAxiosInstance } from "../../axiosConfig";
 import { ProjectRenderDto, Render } from "../types";
-
-// get name from package.json
-import { name } from "../../../package.json";
+import { PACKAGE_NAME } from "../../contants";
 
 const api = createAxiosInstance();
 
@@ -24,7 +22,7 @@ export const renderItem = async (params: RenderParams): Promise<Render> => {
     templateId: params.templateVariantId,
     parameters: params.parameters,
     attributes: {
-      [name]: "true",
+      [PACKAGE_NAME]: "true",
     },
   });
 

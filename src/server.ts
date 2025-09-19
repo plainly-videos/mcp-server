@@ -6,6 +6,7 @@ import {
   registerRenderItem,
   registerCheckRenderStatus,
 } from "./tools";
+import { PACKAGE_NAME, PACKAGE_VERSION } from "./contants";
 
 export class PlainlyMcpServer {
   server: McpServer;
@@ -13,8 +14,8 @@ export class PlainlyMcpServer {
 
   constructor() {
     this.server = new McpServer({
-      name: "plainly-mcp-server",
-      version: "1.0.0",
+      name: PACKAGE_NAME,
+      version: PACKAGE_VERSION,
     });
     this.transport = new StdioServerTransport();
 

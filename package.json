@@ -1,6 +1,6 @@
 {
   "name": "@plainly-videos/mcp-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for Plainly Videos that allows browsing designs and projects, as well as rendering videos.",
   "license": "MIT",
   "author": "PlainlyVideos <contact@planlyvideos.com>",
@@ -19,8 +19,15 @@
     "mcp-server",
     "modelcontextprotocol",
     "aftereffects",
+    "adobe-after-effects",
     "video-api",
-    "video-automation"
+    "video-automation",
+    "video-processing",
+    "video-rendering",
+    "automation",
+    "api",
+    "javascript",
+    "typescript"
   ],
   "bin": "dist/index.js",
   "files": [
