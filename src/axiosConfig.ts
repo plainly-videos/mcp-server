@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import env from "./env";
+import { PACKAGE_NAME, PACKAGE_VERSION } from "./contants";
 
 export function createAxiosInstance(config?: {
   baseUrl?: string;
@@ -15,7 +16,7 @@ export function createAxiosInstance(config?: {
       password: "",
     },
     headers: {
-      "User-Agent": "plainly-mcp-server/1.0",
+      "User-Agent": `${PACKAGE_NAME}/${PACKAGE_VERSION}`,
     },
     timeout: 10000,
   });

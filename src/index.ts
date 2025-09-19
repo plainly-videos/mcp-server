@@ -4,10 +4,8 @@ import { PlainlyMcpServer } from "./server";
 import env from "./env";
 
 // Validate required environment variables
-if (!env.PLAINLY_API_KEY || !env.PLAINLY_API_URL) {
-  console.error(
-    "Please set PLAINLY_API_KEY and PLAINLY_API_URL environment variables."
-  );
+if (!env.PLAINLY_API_KEY) {
+  console.error("PLAINLY_API_KEY environment variable is required.");
   process.exit(1);
 }
 
