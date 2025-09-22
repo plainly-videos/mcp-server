@@ -1,6 +1,6 @@
 {
   "name": "@plainly-videos/mcp-server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MCP server for Plainly Videos that allows browsing designs and projects, as well as rendering videos.",
   "license": "MIT",
   "author": "PlainlyVideos <contact@planlyvideos.com>",
@@ -29,6 +29,7 @@
     "javascript",
     "typescript"
   ],
+  "type": "module",
   "bin": "dist/index.js",
   "files": [
     "dist"
