@@ -1,10 +1,10 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { getRenderItem } from "../sdk";
 import env from "../env";
 import { toToolResponse } from "../utils/toolResponse";
+import { PlainlySdk } from "../sdk";
 
-export function registerCheckRenderStatus(server: McpServer) {
+export function registerCheckRenderStatus(sdk: PlainlySdk, server: McpServer) {
   const Input = {
     renderId: z
       .string()
@@ -93,7 +93,7 @@ Use when:
     },
     async ({ renderId }) => {
       try {
-        const render = await getRenderItem(renderId);
+        const render = await sdk.getRenderItem(renderId);
 
         // Handle successful completion
         if (render.state === "DONE") {

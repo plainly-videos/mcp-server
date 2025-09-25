@@ -13,6 +13,7 @@ import {
   getRenderItem,
   listRenderableItems,
 } from "./api";
+export * from "./types";
 
 export interface PlainlySdk {
   listRenderableItems: (
@@ -26,7 +27,9 @@ export interface PlainlySdk {
   getRenderItem: (renderingId: string) => Promise<Render>;
 }
 
-export default function PlainlySdk(apiClient: AxiosInstance): PlainlySdk {
+export default function createPlainlyClient(
+  apiClient: AxiosInstance
+): PlainlySdk {
   return {
     listRenderableItems: withClient(listRenderableItems, apiClient),
     getRenderableItemsDetails: withClient(getRenderableItemsDetails, apiClient),

@@ -1,9 +1,12 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { getRenderableItemsDetails } from "../sdk";
 import { toToolResponse } from "../utils/toolResponse";
+import { PlainlySdk } from "../sdk";
 
-export function registerGetRenderableItemDetails(server: McpServer) {
+export function registerGetRenderableItemDetails(
+  sdk: PlainlySdk,
+  server: McpServer
+) {
   const Input = {
     renderableItemId: z
       .string()
@@ -120,7 +123,7 @@ Follow-ups:
       outputSchema: Output,
     },
     async ({ renderableItemId, isDesign }) => {
-      const itemDetails = await getRenderableItemsDetails(
+      const itemDetails = await sdk.getRenderableItemsDetails(
         renderableItemId,
         isDesign
       );

@@ -7,23 +7,26 @@ import {
   registerCheckRenderStatus,
 } from "./tools";
 import { PACKAGE_NAME, PACKAGE_VERSION } from "./contants";
+import { AxiosInstance } from "axios";
+import createPlainlyClient, { PlainlySdk } from "./sdk";
 
 export class PlainlyMcpServer {
   server: McpServer;
   transport: StdioServerTransport;
 
-  constructor() {
+  constructor(private readonly apiClient: AxiosInstance) {
     this.server = new McpServer({
       name: PACKAGE_NAME,
       version: PACKAGE_VERSION,
     });
     this.transport = new StdioServerTransport();
+    const plainlySdk: PlainlySdk = createPlainlyClient(this.apiClient);
 
     // Register tools
-    registerListRenderableItems(this.server);
-    registerGetRenderableItemDetails(this.server);
-    registerRenderItem(this.server);
-    registerCheckRenderStatus(this.server);
+    registerListRenderableItems(plainlySdk, this.server);
+    registerGetRenderableItemDetails(plainlySdk, this.server);
+    registerRenderItem(plainlySdk, this.server);
+    registerCheckRenderStatus(plainlySdk, this.server);
   }
 
   async start() {
