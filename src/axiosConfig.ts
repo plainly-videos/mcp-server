@@ -1,13 +1,12 @@
 import axios, { AxiosInstance } from "axios";
-import env from "./env";
 import { PACKAGE_NAME, PACKAGE_VERSION } from "./contants";
 
-export function createAxiosInstance(config?: {
-  baseUrl?: string;
-  apiKey?: string;
+export function createApiClient(config: {
+  baseUrl: string;
+  apiKey: string;
 }): AxiosInstance {
-  const baseUrl = config?.baseUrl || env.PLAINLY_API_URL;
-  const apiKey = config?.apiKey || env.PLAINLY_API_KEY;
+  const baseUrl = config.baseUrl;
+  const apiKey = config.apiKey;
 
   const instance = axios.create({
     baseURL: baseUrl,

@@ -1,11 +1,33 @@
-import { createAxiosInstance } from "../../axiosConfig";
+import { AxiosInstance } from "axios";
 import { getAspectRatio } from "../../utils/aspectRatio";
-import { Design, Project, RenderableItem } from "../types";
+import {
+  Design,
+  Project,
+  RenderableItem,
+  RenderableItemsListOptions,
+} from "../types";
 
-const api = createAxiosInstance();
+export const listRenderableItems = async (
+  client: AxiosInstance,
+  options: RenderableItemsListOptions = {
+    excludeDesigns: false,
+    excludeProjects: false,
+  }
+): Promise<RenderableItem[]> => {
+  const designs = options.excludeDesigns
+    ? []
+    : await listRenderableDesigns(client);
+  const projects = options.excludeProjects
+    ? []
+    : await listRenderableProjects(client);
 
-const listRenderableDesigns = async (): Promise<RenderableItem[]> => {
-  const response = await api.get<Design[]>("/api/v2/designs");
+  return [...projects, ...designs];
+};
+
+const listRenderableDesigns = async (
+  client: AxiosInstance
+): Promise<RenderableItem[]> => {
+  const response = await client.get<Design[]>("/api/v2/designs");
 
   return response.data
     .filter((design) => !design.renderUiDisabled)
@@ -24,8 +46,10 @@ const listRenderableDesigns = async (): Promise<RenderableItem[]> => {
     }));
 };
 
-const listRenderableProjects = async (): Promise<RenderableItem[]> => {
-  const response = await api.get<Project[]>("/api/v2/projects");
+const listRenderableProjects = async (
+  client: AxiosInstance
+): Promise<RenderableItem[]> => {
+  const response = await client.get<Project[]>("/api/v2/projects");
 
   return response.data
     .filter((project) => project.analyzed && project.templates.length > 0)
@@ -45,23 +69,4 @@ const listRenderableProjects = async (): Promise<RenderableItem[]> => {
         durationSeconds: template.duration,
       })),
     }));
-};
-
-type ListOptions = {
-  excludeDesigns?: boolean;
-  excludeProjects?: boolean;
-};
-
-export const listRenderableItems = async (
-  options: ListOptions = {
-    excludeDesigns: false,
-    excludeProjects: false,
-  }
-): Promise<RenderableItem[]> => {
-  const designs = options.excludeDesigns ? [] : await listRenderableDesigns();
-  const projects = options.excludeProjects
-    ? []
-    : await listRenderableProjects();
-
-  return [...projects, ...designs];
 };

@@ -46,6 +46,11 @@ export type RenderableTemplate = {
   durationSeconds: number;
 };
 
+export type RenderableItemsListOptions = {
+  excludeDesigns?: boolean;
+  excludeProjects?: boolean;
+};
+
 export type RenderableItem = {
   isDesign: boolean;
   id: string;
@@ -167,6 +172,13 @@ export type ParametrizationResult = {
   mandatoryNotResolved: boolean;
   fatalError: boolean;
   errorMessages?: string[];
+};
+
+export type RenderItemParams = {
+  isDesign: boolean;
+  projectDesignId: string;
+  templateVariantId: string;
+  parameters?: { [key: string]: any };
 };
 
 export type Render = {

@@ -1,4 +1,4 @@
-import { createAxiosInstance } from "../../axiosConfig";
+import { AxiosInstance } from "axios";
 import {
   DesignDetails,
   DesignVariant,
@@ -8,23 +8,25 @@ import {
   RenderableItemParameterType,
 } from "../types";
 
-const api = createAxiosInstance();
-
 export const getRenderableItemsDetails = async (
+  client: AxiosInstance,
   renderableItemId: string,
   isDesign: boolean
 ): Promise<RenderableItemDetails[]> => {
   if (isDesign) {
-    return await getDesignVariants(renderableItemId);
+    return await getDesignVariants(client, renderableItemId);
   } else {
-    return await getProjectTemplates(renderableItemId);
+    return await getProjectTemplates(client, renderableItemId);
   }
 };
 
 const getDesignVariants = async (
+  client: AxiosInstance,
   designId: string
 ): Promise<RenderableItemDetails[]> => {
-  const response = await api.get<DesignDetails>(`/api/v2/designs/${designId}`);
+  const response = await client.get<DesignDetails>(
+    `/api/v2/designs/${designId}`
+  );
   const designDetails = response.data;
 
   // flatten variants into renderable items with parameter details
@@ -45,9 +47,10 @@ const getDesignVariants = async (
 };
 
 const getProjectTemplates = async (
+  client: AxiosInstance,
   projectId: string
 ): Promise<RenderableItemDetails[]> => {
-  const response = await api.get<ProjectDetails>(
+  const response = await client.get<ProjectDetails>(
     `/api/v2/projects/${projectId}`
   );
   const projectDetails = response.data;
