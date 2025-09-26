@@ -11,26 +11,25 @@ import { AxiosInstance } from "axios";
 import createPlainlyClient, { PlainlySdk } from "./sdk";
 
 export class PlainlyMcpServer {
-  server: McpServer;
-  transport: StdioServerTransport;
+  mcpServer: McpServer;
 
   constructor(private readonly apiClient: AxiosInstance) {
-    this.server = new McpServer({
+    this.mcpServer = new McpServer({
       name: PACKAGE_NAME,
       version: PACKAGE_VERSION,
     });
-    this.transport = new StdioServerTransport();
     const plainlySdk: PlainlySdk = createPlainlyClient(this.apiClient);
 
     // Register tools
-    registerListRenderableItems(plainlySdk, this.server);
-    registerGetRenderableItemDetails(plainlySdk, this.server);
-    registerRenderItem(plainlySdk, this.server);
-    registerCheckRenderStatus(plainlySdk, this.server);
+    registerListRenderableItems(plainlySdk, this.mcpServer);
+    registerGetRenderableItemDetails(plainlySdk, this.mcpServer);
+    registerRenderItem(plainlySdk, this.mcpServer);
+    registerCheckRenderStatus(plainlySdk, this.mcpServer);
   }
 
-  async start() {
+  async startStdio() {
     // Start the stdio server
-    await this.server.connect(this.transport);
+    const transport = new StdioServerTransport();
+    await this.mcpServer.connect(transport);
   }
 }

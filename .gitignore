@@ -1,6 +1,7 @@
 mcp.json
 node_modules/
 dist/
+.smithery/
 .yarn/*
 !.yarn/patches
 !.yarn/plugins

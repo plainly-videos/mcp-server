@@ -72,7 +72,7 @@ yarn build
   "servers": {
     "plainly": {
       "command": "node",
-      "args": ["<FULL PATH TO dist/index.js>"],
+      "args": ["<FULL PATH TO dist/cli.js>"],
       "env": {
         "PLAINLY_API_KEY": "<PLAINLY_API_KEY>"
       }
