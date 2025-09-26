@@ -1,10 +1,6 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import {
-  getRenderableItemsDetails,
-  RenderableItemDetails,
-  renderItem,
-} from "../sdk";
+
 import {
   GeneralRenderError,
   InvalidRenderError,
@@ -15,8 +11,9 @@ import {
 } from "./errors";
 import env from "../env";
 import { toToolResponse } from "../utils/toolResponse";
+import { PlainlySdk, RenderableItemDetails } from "../sdk";
 
-export function registerRenderItem(server: McpServer) {
+export function registerRenderItem(sdk: PlainlySdk, server: McpServer) {
   const Input = {
     isDesign: z
       .boolean()
@@ -105,6 +102,7 @@ Use when:
 
       try {
         const projectDesignItems = await validateProjectDesignExists(
+          sdk,
           isDesign,
           projectDesignId
         );
@@ -117,7 +115,7 @@ Use when:
         await validateTemplateVariantParameters(renderableItem, parameters);
 
         // If everything looks good, submit the render
-        const render = await renderItem({
+        const render = await sdk.renderItem({
           isDesign,
           projectDesignId,
           templateVariantId,
@@ -182,10 +180,11 @@ Use when:
 }
 
 const validateProjectDesignExists = async (
+  sdk: PlainlySdk,
   isDesign: boolean,
   projectDesignId: string
 ): Promise<RenderableItemDetails[]> => {
-  const projectDesignItems = await getRenderableItemsDetails(
+  const projectDesignItems = await sdk.getRenderableItemsDetails(
     projectDesignId,
     isDesign
   );

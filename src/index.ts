@@ -2,19 +2,17 @@
 
 import { PlainlyMcpServer } from "./server";
 import env from "./env";
-import { isValidApiKey } from "./sdk";
+import { createApiClient } from "./axiosConfig";
 
 // Validate required environment variables
 if (!env.PLAINLY_API_KEY) {
   console.error("\nERROR: PLAINLY_API_KEY environment variable is required.\n");
   process.exit(1);
-} else {
-  // Test API key
-  if (!(await isValidApiKey())) {
-    console.error("\nERROR: Invalid PLAINLY_API_KEY.\n");
-    process.exit(1);
-  }
 }
 
-const server = new PlainlyMcpServer();
+const apiClient = createApiClient({
+  baseUrl: env.PLAINLY_API_URL,
+  apiKey: env.PLAINLY_API_KEY,
+});
+const server = new PlainlyMcpServer(apiClient);
 await server.start();

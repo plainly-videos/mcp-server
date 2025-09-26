@@ -1,9 +1,12 @@
 import { z } from "zod";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { listRenderableItems } from "../sdk";
+import { PlainlySdk } from "../sdk";
 import { toToolResponse } from "../utils/toolResponse";
 
-export function registerListRenderableItems(server: McpServer) {
+export function registerListRenderableItems(
+  sdk: PlainlySdk,
+  server: McpServer
+) {
   const Input = {
     excludeDesigns: z
       .boolean()
@@ -107,7 +110,7 @@ Follow-ups:
       outputSchema: Output,
     },
     async ({ excludeDesigns, excludeProjects }) => {
-      const items = await listRenderableItems({
+      const items = await sdk.listRenderableItems({
         excludeDesigns,
         excludeProjects,
       });

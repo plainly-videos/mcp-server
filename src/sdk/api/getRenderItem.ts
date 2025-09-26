@@ -1,11 +1,11 @@
-import { AxiosResponse } from "axios";
-import { createAxiosInstance } from "../../axiosConfig";
+import { AxiosInstance, AxiosResponse } from "axios";
 import { Render } from "../types";
 
-const api = createAxiosInstance();
-
-export const getRenderItem = async (renderingId: string): Promise<Render> => {
-  const response = await api.get<Render, AxiosResponse<Render>, void>(
+export const getRenderItem = async (
+  client: AxiosInstance,
+  renderingId: string
+): Promise<Render> => {
+  const response = await client.get<Render, AxiosResponse<Render>, void>(
     `/api/v2/renders/${renderingId}`
   );
 

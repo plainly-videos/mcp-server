@@ -1,19 +1,12 @@
-import { AxiosResponse } from "axios";
-import { createAxiosInstance } from "../../axiosConfig";
-import { ProjectRenderDto, Render } from "../types";
+import { AxiosInstance, AxiosResponse } from "axios";
+import { ProjectRenderDto, Render, RenderItemParams } from "../types";
 import { PACKAGE_NAME } from "../../contants";
 
-const api = createAxiosInstance();
-
-type RenderParams = {
-  isDesign: boolean;
-  projectDesignId: string;
-  templateVariantId: string;
-  parameters?: { [key: string]: any };
-};
-
-export const renderItem = async (params: RenderParams): Promise<Render> => {
-  const response = await api.post<
+export const renderItem = async (
+  client: AxiosInstance,
+  params: RenderItemParams
+): Promise<Render> => {
+  const response = await client.post<
     Render,
     AxiosResponse<Render>,
     ProjectRenderDto
