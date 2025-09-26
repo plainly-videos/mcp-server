@@ -36,7 +36,7 @@ export function registerGetRenderableItemDetails(
             .describe(
               "Template/variant identifier (the renderable leaf under the parent)."
             ),
-          videoUrl: z
+          exampleVideoUrl: z
             .string()
             .url()
             .optional()
@@ -80,6 +80,13 @@ export function registerGetRenderableItemDetails(
                   .nullable()
                   .describe(
                     "UI label for the parameter, used when description is missing or brief."
+                  ),
+                defaultValue: z
+                  .any()
+                  .nullable()
+                  .optional()
+                  .describe(
+                    "Default value to use if none is provided. May be null or missing."
                   ),
               })
             )
