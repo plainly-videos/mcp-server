@@ -5,9 +5,9 @@ export default defineConfig({
   build: {
     target: "node18",
     lib: {
-      entry: resolve(__dirname, "src/index.ts"),
+      entry: resolve(__dirname, "src/cli.ts"),
       formats: ["es"],
-      fileName: "index",
+      fileName: "cli",
     },
     rollupOptions: {
       external: [
@@ -21,7 +21,7 @@ export default defineConfig({
       output: {
         format: "es",
         preserveModules: false,
-        entryFileNames: "index.js",
+        entryFileNames: "cli.js",
       },
     },
     outDir: "dist",

@@ -270,7 +270,7 @@ __metadata:
     vite: "npm:^6.3.6"
     zod: "npm:^3.25.76"
   bin:
-    mcp-server: dist/index.js
+    mcp-server: dist/cli.js
   languageName: unknown
   linkType: soft
 
