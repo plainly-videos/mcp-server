@@ -15,4 +15,4 @@ const apiClient = createApiClient({
   apiKey: env.PLAINLY_API_KEY,
 });
 const server = new PlainlyMcpServer(apiClient);
-await server.start();
+await server.startStdio();
