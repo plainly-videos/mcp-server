@@ -210,9 +210,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@modelcontextprotocol/sdk@npm:^1.0.4":
-  version: 1.18.1
-  resolution: "@modelcontextprotocol/sdk@npm:1.18.1"
+"@modelcontextprotocol/sdk@npm:^1.18.2":
+  version: 1.18.2
+  resolution: "@modelcontextprotocol/sdk@npm:1.18.2"
   dependencies:
     ajv: "npm:^6.12.6"
     content-type: "npm:^1.0.5"
@@ -226,7 +226,7 @@ __metadata:
     raw-body: "npm:^3.0.0"
     zod: "npm:^3.23.8"
     zod-to-json-schema: "npm:^3.24.1"
-  checksum: 10c0/86849684f31932d4f1424f7e86dda6d0a3b308ad828790c0c052f381c57622829f8b86ad5cc0786d80c834ea113d7033398660e7327585db095fcaf6c4bc2ce0
+  checksum: 10c0/f0cb7a97ff264cbd389753b038c7dd197f359445324a7d4eb1d8e9be2cfb1e19d6375a12098cdd71c06847e9978c976950fc17f8d4f5e7778dd99d6f9416a48e
   languageName: node
   linkType: hard
 
@@ -263,7 +263,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@plainly-videos/mcp-server@workspace:."
   dependencies:
-    "@modelcontextprotocol/sdk": "npm:^1.0.4"
+    "@modelcontextprotocol/sdk": "npm:^1.18.2"
     "@types/node": "npm:^22.10.6"
     axios: "npm:^1.12.2"
     typescript: "npm:^5.7.3"
