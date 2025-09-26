@@ -1,4 +1,5 @@
 # Plainly's Official MCP Server
+[![smithery badge](https://smithery.ai/badge/@plainly-videos/mcp-server)](https://smithery.ai/server/@plainly-videos/mcp-server)
 
 Implementation of MCP server for [Plainly](https://www.plainlyvideos.com/) in NodeJS. Enables LLM clients to connect and interact with Plainly APIs.
 
@@ -17,6 +18,16 @@ Implementation of MCP server for [Plainly](https://www.plainlyvideos.com/) in No
 - [Plainly Account](https://app.plainlyvideos.com)
 
 ## ▶️ How to run (local installation)
+
+### Installing via Smithery
+
+To install Plainly Videos MCP Server automatically via [Smithery](https://smithery.ai/server/@plainly-videos/mcp-server):
+
+```bash
+npx -y @smithery/cli install @plainly-videos/mcp-server
+```
+
+### Manual Installation
 
 1. **Get your Plainly API key**
 
