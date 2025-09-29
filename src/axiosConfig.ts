@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { PACKAGE_NAME, PACKAGE_VERSION } from "./contants";
+import { PlainlyApiAuthenticationError, PlainlyApiError } from "./sdk/errors";
 
 export function createApiClient(config: {
   baseUrl: string;
@@ -26,14 +27,18 @@ export function createApiClient(config: {
     (error) => {
       if (error.response) {
         const { status, data } = error.response;
-        const message =
-          data?.message || `API request failed with status ${status}`;
-        return Promise.reject({
-          status,
-          message,
-          details: data,
-        });
+
+        // Authentication errors
+        if (status === 401 || status === 403) {
+          return Promise.reject(new PlainlyApiAuthenticationError(status));
+        }
+
+        // Other API errors
+        if (status >= 400 && status < 600) {
+          return Promise.reject(new PlainlyApiError(status, data?.message));
+        }
       }
+      // Network or other errors
       return Promise.reject(error);
     }
   );
