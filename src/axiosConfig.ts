@@ -33,30 +33,12 @@ export function createApiClient(config: {
           return Promise.reject(new PlainlyApiAuthenticationError(status));
         }
 
-        // Other server errors
+        // Other API errors
         if (status >= 400 && status < 600) {
           return Promise.reject(new PlainlyApiError(status, data?.message));
         }
-
-        // Other errors
-        if (status >= 400 && status < 600) {
-          const message =
-            data?.message || `API request failed with status ${status}`;
-          return Promise.reject({
-            status,
-            message,
-            details: data,
-          });
-        }
-
-        const message =
-          data?.message || `API request failed with status ${status}`;
-        return Promise.reject({
-          status,
-          message,
-          details: data,
-        });
       }
+      // Network or other errors
       return Promise.reject(error);
     }
   );
