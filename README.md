@@ -5,8 +5,8 @@ Implementation of MCP server for [Plainly](https://www.plainlyvideos.com/) in No
 ## 🎥 Demo
 
 <p align="center">
-  <a href="https://storage.googleapis.com/plainly-static-data/plainly-mcp-server-demo.mp4">
-    <img src="https://storage.googleapis.com/plainly-static-data/plainly-mcp-server-demo-thumbnail.png" alt="Demo Video" width="500">
+  <a href="https://plainlyvideos.wistia.com/medias/j099l7maqm" title="Demo video">
+    <img src="https://storage.googleapis.com/plainly-static-data/plainly-mcp-server-demo-thumbnail.png" alt="Demo video thumbnail" width="500">
   </a>
 </p>
 
