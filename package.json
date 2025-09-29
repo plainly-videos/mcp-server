@@ -30,7 +30,8 @@
     "typescript"
   ],
   "type": "module",
-  "bin": "dist/index.js",
+  "module": "src/smithery.ts",
+  "bin": "dist/cli.js",
   "files": [
     "dist"
   ],
@@ -42,11 +43,12 @@
   },
   "packageManager": "yarn@4.9.2",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.4",
+    "@modelcontextprotocol/sdk": "^1.18.2",
     "axios": "^1.12.2",
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@smithery/sdk": "^1.6.4",
     "@types/node": "^22.10.6",
     "typescript": "^5.7.3",
     "vite": "^6.3.6"
