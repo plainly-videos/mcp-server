@@ -1,4 +1,5 @@
 # Plainly's Official MCP Server
+
 [![smithery badge](https://smithery.ai/badge/@plainly-videos/mcp-server)](https://smithery.ai/server/@plainly-videos/mcp-server)
 
 Implementation of MCP server for [Plainly](https://www.plainlyvideos.com/) in NodeJS. Enables LLM clients to connect and interact with Plainly APIs.
@@ -17,17 +18,9 @@ Implementation of MCP server for [Plainly](https://www.plainlyvideos.com/) in No
 - [NPM](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - [Plainly Account](https://app.plainlyvideos.com)
 
-## ▶️ How to run (local installation)
+## ▶️ How to Run
 
-### Installing via Smithery
-
-To install Plainly Videos MCP Server automatically via [Smithery](https://smithery.ai/server/@plainly-videos/mcp-server):
-
-```bash
-npx -y @smithery/cli install @plainly-videos/mcp-server
-```
-
-### Manual Installation
+### Install via npm
 
 1. **Get your Plainly API key**
 
@@ -37,21 +30,35 @@ npx -y @smithery/cli install @plainly-videos/mcp-server
 
 2. **Add config to your editor**
 
-```json
-{
-  "servers": {
-    "plainly": {
-      "command": "npx",
-      "args": ["-y", "@plainly-videos/mcp-server@latest"],
-      "env": {
-        "PLAINLY_API_KEY": "<PLAINLY_API_KEY>"
-      }
-    }
-  }
-}
+   ```json
+   {
+     "servers": {
+       "plainly": {
+         "command": "npx",
+         "args": ["-y", "@plainly-videos/mcp-server@latest"],
+         "env": {
+           "PLAINLY_API_KEY": "<PLAINLY_API_KEY>"
+         }
+       }
+     }
+   }
+   ```
+
+   > 🔑 Replace <PLAINLY_API_KEY> with your actual API key.
+
+### Install via Smithery
+
+Go to [Smithery Plainly MCP page](https://smithery.ai/server/@plainly-videos/mcp-server), select your LLM client, and copy the generated command.
+
+For example, with Claude as the client:
+
+```bash
+npx -y @smithery/cli@latest install @plainly-videos/mcp-server --client claude --key <YOUR_SMITHERY_KEY>
 ```
 
-## 🛠️ Available tools
+> 🔑 Replace <YOUR_SMITHERY_KEY> with your Smithery API key.
+
+## 🛠️ Available Tools
 
 - `list_renderable_items` - returns a list of all criteria matching designs and custom projects for authenticated user
 - `get_renderable_items_details` - returns details of a single design or custom project, such as: required and optional parameters, preview links, aspect ratios, etc.
@@ -62,7 +69,7 @@ npx -y @smithery/cli install @plainly-videos/mcp-server
 
 This implementation **does not** include `prompts` or `resources` from the MCP specification. However, this may change in the future when there is broader support across popular MCP clients.
 
-## 🚧 Development mode
+## 🚧 Development Mode
 
 If you want to run the server in development mode, you can install dependencies and run the server using the following command:
 
@@ -94,7 +101,7 @@ yarn build
 
 3. Start MCP server from `.vscode/mcp.json`
 
-## 📄 Plainly developer resources
+## 📄 Plainly Developer Resources
 
 - [Help center](https://help.plainlyvideos.com/)
 - [API reference](https://app.plainlyvideos.com/api-reference.html)
