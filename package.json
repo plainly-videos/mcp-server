@@ -51,6 +51,6 @@
     "@smithery/sdk": "^1.6.4",
     "@types/node": "^22.10.6",
     "typescript": "^5.7.3",
-    "vite": "^6.3.6"
+    "vite": "^7.2.4"
   }
 }
