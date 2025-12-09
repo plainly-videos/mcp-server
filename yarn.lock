@@ -210,27 +210,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@modelcontextprotocol/sdk@npm:^1.18.0":
-  version: 1.18.2
-  resolution: "@modelcontextprotocol/sdk@npm:1.18.2"
-  dependencies:
-    ajv: "npm:^6.12.6"
-    content-type: "npm:^1.0.5"
-    cors: "npm:^2.8.5"
-    cross-spawn: "npm:^7.0.5"
-    eventsource: "npm:^3.0.2"
-    eventsource-parser: "npm:^3.0.0"
-    express: "npm:^5.0.1"
-    express-rate-limit: "npm:^7.5.0"
-    pkce-challenge: "npm:^5.0.0"
-    raw-body: "npm:^3.0.0"
-    zod: "npm:^3.23.8"
-    zod-to-json-schema: "npm:^3.24.1"
-  checksum: 10c0/f0cb7a97ff264cbd389753b038c7dd197f359445324a7d4eb1d8e9be2cfb1e19d6375a12098cdd71c06847e9978c976950fc17f8d4f5e7778dd99d6f9416a48e
-  languageName: node
-  linkType: hard
-
-"@modelcontextprotocol/sdk@npm:^1.24.3":
+"@modelcontextprotocol/sdk@npm:^1.20.0, @modelcontextprotocol/sdk@npm:^1.24.3":
   version: 1.24.3
   resolution: "@modelcontextprotocol/sdk@npm:1.24.3"
   dependencies:
@@ -294,7 +274,7 @@ __metadata:
   resolution: "@plainly-videos/mcp-server@workspace:."
   dependencies:
     "@modelcontextprotocol/sdk": "npm:^1.24.3"
-    "@smithery/sdk": "npm:^1.6.4"
+    "@smithery/sdk": "npm:^1.7.5"
     "@types/node": "npm:^22.10.6"
     axios: "npm:^1.12.2"
     typescript: "npm:^5.7.3"
@@ -459,20 +439,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@smithery/sdk@npm:^1.6.4":
-  version: 1.6.4
-  resolution: "@smithery/sdk@npm:1.6.4"
+"@smithery/sdk@npm:^1.7.5":
+  version: 1.7.5
+  resolution: "@smithery/sdk@npm:1.7.5"
   dependencies:
-    "@modelcontextprotocol/sdk": "npm:^1.18.0"
+    "@modelcontextprotocol/sdk": "npm:^1.20.0"
+    chalk: "npm:^5.6.2"
     express: "npm:^5.1.0"
     jose: "npm:^6.1.0"
     json-schema: "npm:^0.4.0"
     lodash: "npm:^4.17.21"
     okay-error: "npm:^1.0.3"
     uuid: "npm:^11.0.3"
-    zod: "npm:^3.23.8"
+    zod: "npm:>=3.23.8 <4.0.0"
     zod-to-json-schema: "npm:^3.24.1"
-  checksum: 10c0/2fb8b698b6b6c7626511b7487bf4f9e0c4a594317fb7f10170d8f498441d8586aacbcd68771db17f11a7262c507388c52248b9ada1944a81b98e5e2121f659e3
+  checksum: 10c0/63b51495f726e179be240d6f94460efb2378f9a3b17c18b3b05782e21300ab03160905b4d19ca99cdf787e2abc9895936f8366f48b4742a132845f5d8a1e0cff
   languageName: node
   linkType: hard
 
@@ -527,18 +508,6 @@ __metadata:
     ajv:
       optional: true
   checksum: 10c0/168d6bca1ea9f163b41c8147bae537e67bd963357a5488a1eaf3abe8baa8eec806d4e45f15b10767e6020679315c7e1e5e6803088dfb84efa2b4e9353b83dd0a
-  languageName: node
-  linkType: hard
-
-"ajv@npm:^6.12.6":
-  version: 6.12.6
-  resolution: "ajv@npm:6.12.6"
-  dependencies:
-    fast-deep-equal: "npm:^3.1.1"
-    fast-json-stable-stringify: "npm:^2.0.0"
-    json-schema-traverse: "npm:^0.4.1"
-    uri-js: "npm:^4.2.2"
-  checksum: 10c0/41e23642cbe545889245b9d2a45854ebba51cda6c778ebced9649420d9205f2efb39cb43dbc41e358409223b1ea43303ae4839db682c848b891e4811da1a5a71
   languageName: node
   linkType: hard
 
@@ -679,6 +648,13 @@ __metadata:
     call-bind-apply-helpers: "npm:^1.0.2"
     get-intrinsic: "npm:^1.3.0"
   checksum: 10c0/f4796a6a0941e71c766aea672f63b72bc61234c4f4964dc6d7606e3664c307e7d77845328a8f3359ce39ddb377fed67318f9ee203dea1d47e46165dcf2917644
+  languageName: node
+  linkType: hard
+
+"chalk@npm:^5.6.2":
+  version: 5.6.2
+  resolution: "chalk@npm:5.6.2"
+  checksum: 10c0/99a4b0f0e7991796b1e7e3f52dceb9137cae2a9dfc8fc0784a550dc4c558e15ab32ed70b14b21b52beb2679b4892b41a0aa44249bcb996f01e125d58477c6976
   languageName: node
   linkType: hard
 
@@ -1065,17 +1041,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-deep-equal@npm:^3.1.1, fast-deep-equal@npm:^3.1.3":
+"fast-deep-equal@npm:^3.1.3":
   version: 3.1.3
   resolution: "fast-deep-equal@npm:3.1.3"
   checksum: 10c0/40dedc862eb8992c54579c66d914635afbec43350afbbe991235fdcb4e3a8d5af1b23ae7e79bef7d4882d0ecee06c3197488026998fb19f72dc95acff1d1b1d0
-  languageName: node
-  linkType: hard
-
-"fast-json-stable-stringify@npm:^2.0.0":
-  version: 2.1.0
-  resolution: "fast-json-stable-stringify@npm:2.1.0"
-  checksum: 10c0/7f081eb0b8a64e0057b3bb03f974b3ef00135fbf36c1c710895cd9300f13c94ba809bb3a81cf4e1b03f6e5285610a61abbd7602d0652de423144dfee5a389c9b
   languageName: node
   linkType: hard
 
@@ -1428,13 +1397,6 @@ __metadata:
   version: 6.1.3
   resolution: "jose@npm:6.1.3"
   checksum: 10c0/b9577b4a7a5e84131011c23823db9f5951eae3ba796771a6a2401ae5dd50daf71104febc8ded9c38146aa5ebe94a92ac09c725e699e613ef26949b9f5a8bc30f
-  languageName: node
-  linkType: hard
-
-"json-schema-traverse@npm:^0.4.1":
-  version: 0.4.1
-  resolution: "json-schema-traverse@npm:0.4.1"
-  checksum: 10c0/108fa90d4cc6f08243aedc6da16c408daf81793bf903e9fd5ab21983cda433d5d2da49e40711da016289465ec2e62e0324dcdfbc06275a607fe3233fde4942ce
   languageName: node
   linkType: hard
 
@@ -1833,13 +1795,6 @@ __metadata:
   version: 1.1.0
   resolution: "proxy-from-env@npm:1.1.0"
   checksum: 10c0/fe7dd8b1bdbbbea18d1459107729c3e4a2243ca870d26d34c2c1bcd3e4425b7bcc5112362df2d93cc7fb9746f6142b5e272fd1cc5c86ddf8580175186f6ad42b
-  languageName: node
-  linkType: hard
-
-"punycode@npm:^2.1.0":
-  version: 2.3.1
-  resolution: "punycode@npm:2.3.1"
-  checksum: 10c0/14f76a8206bc3464f794fb2e3d3cc665ae416c01893ad7a02b23766eb07159144ee612ad67af5e84fa4479ccfe67678c4feb126b0485651b302babf66f04f9e9
   languageName: node
   linkType: hard
 
@@ -2315,15 +2270,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uri-js@npm:^4.2.2":
-  version: 4.4.1
-  resolution: "uri-js@npm:4.4.1"
-  dependencies:
-    punycode: "npm:^2.1.0"
-  checksum: 10c0/4ef57b45aa820d7ac6496e9208559986c665e49447cb072744c13b66925a362d96dd5a46c4530a6b8e203e5db5fe849369444440cb22ecfc26c679359e5dfa3c
-  languageName: node
-  linkType: hard
-
 "uuid@npm:^11.0.3":
   version: 11.1.0
   resolution: "uuid@npm:11.1.0"
@@ -2478,7 +2424,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.23.8, zod@npm:^3.25.76":
+"zod@npm:>=3.23.8 <4.0.0, zod@npm:^3.25.76":
   version: 3.25.76
   resolution: "zod@npm:3.25.76"
   checksum: 10c0/5718ec35e3c40b600316c5b4c5e4976f7fee68151bc8f8d90ec18a469be9571f072e1bbaace10f1e85cf8892ea12d90821b200e980ab46916a6166a4260a983c
