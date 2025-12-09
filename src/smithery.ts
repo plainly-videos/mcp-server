@@ -1,13 +1,9 @@
 import { z } from "zod";
-import { PlainlyMcpServer } from "./server";
-import env from "./env";
 import { createApiClient } from "./axiosConfig";
+import env from "./env";
+import { PlainlyMcpServer } from "./server";
 
-export default function createServer({
-  config,
-}: {
-  config: z.infer<typeof configSchema>;
-}) {
+export default function createServer({ config }: { config: z.infer<typeof configSchema> }) {
   const apiClient = createApiClient({
     baseUrl: env.PLAINLY_API_URL,
     apiKey: config.apiKey,

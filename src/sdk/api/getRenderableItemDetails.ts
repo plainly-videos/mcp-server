@@ -1,5 +1,5 @@
-import { AxiosInstance } from "axios";
-import {
+import type { AxiosInstance } from "axios";
+import type {
   DesignDetails,
   DesignVariant,
   Layer,
@@ -11,7 +11,7 @@ import {
 export const getRenderableItemsDetails = async (
   client: AxiosInstance,
   renderableItemId: string,
-  isDesign: boolean
+  isDesign: boolean,
 ): Promise<RenderableItemDetails[]> => {
   if (isDesign) {
     return await getDesignVariants(client, renderableItemId);
@@ -20,13 +20,8 @@ export const getRenderableItemsDetails = async (
   }
 };
 
-const getDesignVariants = async (
-  client: AxiosInstance,
-  designId: string
-): Promise<RenderableItemDetails[]> => {
-  const response = await client.get<DesignDetails>(
-    `/api/v2/designs/${designId}`
-  );
+const getDesignVariants = async (client: AxiosInstance, designId: string): Promise<RenderableItemDetails[]> => {
+  const response = await client.get<DesignDetails>(`/api/v2/designs/${designId}`);
   const designDetails = response.data;
 
   // flatten variants into renderable items with parameter details
@@ -46,13 +41,8 @@ const getDesignVariants = async (
   }));
 };
 
-const getProjectTemplates = async (
-  client: AxiosInstance,
-  projectId: string
-): Promise<RenderableItemDetails[]> => {
-  const response = await client.get<ProjectDetails>(
-    `/api/v2/projects/${projectId}`
-  );
+const getProjectTemplates = async (client: AxiosInstance, projectId: string): Promise<RenderableItemDetails[]> => {
+  const response = await client.get<ProjectDetails>(`/api/v2/projects/${projectId}`);
   const projectDetails = response.data;
 
   // flatten templates into renderable items with parameter details
@@ -72,11 +62,11 @@ const getProjectTemplates = async (
 };
 
 const isDynamicLayer = (
-  layer: Layer
+  layer: Layer,
 ): layer is Layer & {
   parametrization: { value: string; mandatory: boolean };
 } => {
-  return layer.parametrization != null && layer.parametrization.expression;
+  return !!layer.parametrization?.expression;
 };
 
 const getExampleVideoUrl = (variant: DesignVariant): string | undefined => {

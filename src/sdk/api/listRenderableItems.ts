@@ -1,32 +1,21 @@
-import { AxiosInstance } from "axios";
+import type { AxiosInstance } from "axios";
 import { getAspectRatio } from "../../utils/aspectRatio";
-import {
-  Design,
-  Project,
-  RenderableItem,
-  RenderableItemsListOptions,
-} from "../types";
+import type { Design, Project, RenderableItem, RenderableItemsListOptions } from "../types";
 
 export const listRenderableItems = async (
   client: AxiosInstance,
   options: RenderableItemsListOptions = {
     excludeDesigns: false,
     excludeProjects: false,
-  }
+  },
 ): Promise<RenderableItem[]> => {
-  const designs = options.excludeDesigns
-    ? []
-    : await listRenderableDesigns(client);
-  const projects = options.excludeProjects
-    ? []
-    : await listRenderableProjects(client);
+  const designs = options.excludeDesigns ? [] : await listRenderableDesigns(client);
+  const projects = options.excludeProjects ? [] : await listRenderableProjects(client);
 
   return [...projects, ...designs];
 };
 
-const listRenderableDesigns = async (
-  client: AxiosInstance
-): Promise<RenderableItem[]> => {
+const listRenderableDesigns = async (client: AxiosInstance): Promise<RenderableItem[]> => {
   const response = await client.get<Design[]>("/api/v2/designs");
 
   return response.data
@@ -46,9 +35,7 @@ const listRenderableDesigns = async (
     }));
 };
 
-const listRenderableProjects = async (
-  client: AxiosInstance
-): Promise<RenderableItem[]> => {
+const listRenderableProjects = async (client: AxiosInstance): Promise<RenderableItem[]> => {
   const response = await client.get<Project[]>("/api/v2/projects");
 
   return response.data
@@ -62,10 +49,7 @@ const listRenderableProjects = async (
       templates: project.templates.map((template) => ({
         id: template.id,
         name: template.name,
-        aspectRatio: getAspectRatio(
-          template.resolution.width,
-          template.resolution.height
-        ),
+        aspectRatio: getAspectRatio(template.resolution.width, template.resolution.height),
         durationSeconds: template.duration,
       })),
     }));

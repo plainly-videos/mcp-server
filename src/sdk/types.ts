@@ -58,18 +58,12 @@ export type RenderableItem = {
   description: string | null;
   metadata: {
     category: string | null;
-    attributes: { [key: string]: any } | null;
+    attributes: { [key: string]: unknown } | null;
   };
   templates: RenderableTemplate[];
 };
 
-export type ParameterType =
-  | "STRING"
-  | "MEDIA"
-  | "COLOR"
-  | "NUMBER"
-  | "BOOLEAN"
-  | "COMPLEX";
+export type ParameterType = "STRING" | "MEDIA" | "COLOR" | "NUMBER" | "BOOLEAN" | "COMPLEX";
 
 export type DesignVariantDetails = DesignVariant & {};
 
@@ -80,8 +74,8 @@ export type DesignDetails = Design<DesignVariantDetails> & {
     name: string;
     description: string;
     optional: boolean;
-    defaultValue: any;
-    sampleValue: any;
+    defaultValue: unknown;
+    sampleValue: unknown;
   }[];
 };
 
@@ -142,7 +136,7 @@ export type RenderableItemDetails = {
     type: RenderableItemParameterType;
     description: string | null;
     label: string | null;
-    defaultValue?: any | null;
+    defaultValue?: unknown | null;
   }[];
 };
 
@@ -158,8 +152,8 @@ enum RenderState {
 }
 
 export type AbstractRenderDto = {
-  parameters?: { [key: string]: any };
-  attributes?: { [key: string]: any };
+  parameters?: { [key: string]: unknown };
+  attributes?: { [key: string]: unknown };
 };
 
 export type ProjectRenderDto = AbstractRenderDto & {
@@ -178,7 +172,7 @@ export type RenderItemParams = {
   isDesign: boolean;
   projectDesignId: string;
   templateVariantId: string;
-  parameters?: { [key: string]: any };
+  parameters?: { [key: string]: unknown };
 };
 
 export type Render = {

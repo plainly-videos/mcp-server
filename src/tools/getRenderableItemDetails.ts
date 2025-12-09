@@ -1,48 +1,25 @@
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import type { PlainlySdk } from "../sdk";
 import { toToolResponse } from "../utils/toolResponse";
-import { PlainlySdk } from "../sdk";
 
-export function registerGetRenderableItemDetails(
-  sdk: PlainlySdk,
-  server: McpServer
-) {
+export function registerGetRenderableItemDetails(sdk: PlainlySdk, server: McpServer) {
   const Input = {
-    renderableItemId: z
-      .string()
-      .describe(
-        "Identifier of the parent item to inspect (projectId or designId)."
-      ),
-    isDesign: z
-      .boolean()
-      .describe(
-        "True if the parent item is a Design; false if it is a Project."
-      ),
+    renderableItemId: z.string().describe("Identifier of the parent item to inspect (projectId or designId)."),
+    isDesign: z.boolean().describe("True if the parent item is a Design; false if it is a Project."),
   };
   const Output = {
     itemDetails: z
       .array(
         z.object({
-          isDesign: z
-            .boolean()
-            .describe(
-              "True when the parent is a Design; false when it is a Project."
-            ),
-          projectDesignId: z
-            .string()
-            .describe("Parent identifier echoed back (projectId or designId)."),
-          templateVariantId: z
-            .string()
-            .describe(
-              "Template/variant identifier (the renderable leaf under the parent)."
-            ),
+          isDesign: z.boolean().describe("True when the parent is a Design; false when it is a Project."),
+          projectDesignId: z.string().describe("Parent identifier echoed back (projectId or designId)."),
+          templateVariantId: z.string().describe("Template/variant identifier (the renderable leaf under the parent)."),
           exampleVideoUrl: z
             .string()
             .url()
             .optional()
-            .describe(
-              "Public preview video URL (usually MP4) if available for this template/variant."
-            ),
+            .describe("Public preview video URL (usually MP4) if available for this template/variant."),
 
           parameters: z
             .array(
@@ -50,53 +27,36 @@ export function registerGetRenderableItemDetails(
                 key: z
                   .string()
                   .describe(
-                    "Parameter key used by the render API. If description/label is missing, use this as the final hint to infer purpose."
+                    "Parameter key used by the render API. If description/label is missing, use this as the final hint to infer purpose.",
                   ),
-                mandatory: z
-                  .boolean()
-                  .describe(
-                    "Whether the parameter must be provided to render successfully."
-                  ),
+                mandatory: z.boolean().describe("Whether the parameter must be provided to render successfully."),
                 type: z
-                  .enum([
-                    "STRING",
-                    "MEDIA",
-                    "MEDIA (image)",
-                    "MEDIA (audio)",
-                    "MEDIA (video)",
-                    "COLOR",
-                  ])
+                  .enum(["STRING", "MEDIA", "MEDIA (image)", "MEDIA (audio)", "MEDIA (video)", "COLOR"])
                   .describe(
-                    "Expected data type. Respect specific media subtypes (image/audio/video) when supplying values."
+                    "Expected data type. Respect specific media subtypes (image/audio/video) when supplying values.",
                   ),
                 description: z
                   .string()
                   .nullable()
-                  .describe(
-                    "Human-readable explanation of the parameter's purpose, if available."
-                  ),
+                  .describe("Human-readable explanation of the parameter's purpose, if available."),
                 label: z
                   .string()
                   .nullable()
-                  .describe(
-                    "UI label for the parameter, used when description is missing or brief."
-                  ),
+                  .describe("UI label for the parameter, used when description is missing or brief."),
                 defaultValue: z
                   .any()
                   .nullable()
                   .optional()
-                  .describe(
-                    "Default value to use if none is provided. May be null or missing."
-                  ),
-              })
+                  .describe("Default value to use if none is provided. May be null or missing."),
+              }),
             )
             .describe(
-              "Parameters required by this template/variant. Provide all parameters marked mandatory; others are optional."
+              "Parameters required by this template/variant. Provide all parameters marked mandatory; others are optional.",
             ),
-        })
+        }),
       )
       .describe(
-        "One entry per template/variant under the requested parent, with the parameters needed to render each."
+        "One entry per template/variant under the requested parent, with the parameters needed to render each.",
       ),
   };
 
@@ -130,12 +90,9 @@ Follow-ups:
       outputSchema: Output,
     },
     async ({ renderableItemId, isDesign }) => {
-      const itemDetails = await sdk.getRenderableItemsDetails(
-        renderableItemId,
-        isDesign
-      );
+      const itemDetails = await sdk.getRenderableItemsDetails(renderableItemId, isDesign);
 
       return toToolResponse({ itemDetails });
-    }
+    },
   );
 }

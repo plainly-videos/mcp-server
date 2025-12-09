@@ -39,22 +39,17 @@ export class MissingParametersError extends PlainlyMcpServerError {
   constructor(missing: { key: string; label: string | null }[]) {
     super({
       message: "Missing required parameters.",
-      solution:
-        "Check the error details and provide missing mandatory parameters.",
+      solution: "Check the error details and provide missing mandatory parameters.",
       details: JSON.stringify(missing),
     });
   }
 }
 
 export class InvalidRenderError extends PlainlyMcpServerError {
-  constructor(
-    message: string,
-    invalidParams?: { key?: string; errors: string[] }[]
-  ) {
+  constructor(message: string, invalidParams?: { key?: string; errors: string[] }[]) {
     super({
       message: message || "An error occurred while creating the render.",
-      solution:
-        "Check the error details and adjust the parameters accordingly.",
+      solution: "Check the error details and adjust the parameters accordingly.",
       details: JSON.stringify(invalidParams),
     });
   }

@@ -1,11 +1,8 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { type AxiosInstance } from "axios";
 import { PACKAGE_NAME, PACKAGE_VERSION } from "./contants";
 import { PlainlyApiAuthenticationError, PlainlyApiError } from "./sdk/errors";
 
-export function createApiClient(config: {
-  baseUrl: string;
-  apiKey: string;
-}): AxiosInstance {
+export function createApiClient(config: { baseUrl: string; apiKey: string }): AxiosInstance {
   const baseUrl = config.baseUrl;
   const apiKey = config.apiKey;
 
@@ -40,7 +37,7 @@ export function createApiClient(config: {
       }
       // Network or other errors
       return Promise.reject(error);
-    }
+    },
   );
 
   return instance;

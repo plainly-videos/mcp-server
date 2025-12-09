@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { PlainlyMcpServer } from "./server";
-import env from "./env";
 import { createApiClient } from "./axiosConfig";
+import env from "./env";
+import { PlainlyMcpServer } from "./server";
 
 // Validate required environment variables
 if (!env.PLAINLY_API_KEY) {

@@ -1,58 +1,29 @@
-import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
 import env from "../env";
+import type { PlainlySdk } from "../sdk";
 import { toToolResponse } from "../utils/toolResponse";
-import { PlainlySdk } from "../sdk";
 
 export function registerCheckRenderStatus(sdk: PlainlySdk, server: McpServer) {
   const Input = {
-    renderId: z
-      .string()
-      .describe("The render ID returned from the `render_item` tool."),
+    renderId: z.string().describe("The render ID returned from the `render_item` tool."),
   };
 
   const Output = {
     // Render information
     message: z.string().describe("A message describing the render status."),
     renderId: z.string().describe("The render job ID."),
-    renderDetailsPageUrl: z
-      .string()
-      .optional()
-      .describe("URL to the render details page."),
-    projectDesignId: z
-      .string()
-      .describe("Parent identifier (projectId or designId)."),
-    templateVariantId: z
-      .string()
-      .describe(
-        "Template/variant identifier (the renderable leaf under the parent)."
-      ),
-    projectDesignName: z
-      .string()
-      .optional()
-      .describe("Name of the project or design."),
-    templateVariantName: z
-      .string()
-      .optional()
-      .describe("Name of the template or variant."),
+    renderDetailsPageUrl: z.string().optional().describe("URL to the render details page."),
+    projectDesignId: z.string().describe("Parent identifier (projectId or designId)."),
+    templateVariantId: z.string().describe("Template/variant identifier (the renderable leaf under the parent)."),
+    projectDesignName: z.string().optional().describe("Name of the project or design."),
+    templateVariantName: z.string().optional().describe("Name of the template or variant."),
     state: z
-      .enum([
-        "PENDING",
-        "THROTTLED",
-        "QUEUED",
-        "IN_PROGRESS",
-        "DONE",
-        "FAILED",
-        "INVALID",
-        "CANCELLED",
-      ])
+      .enum(["PENDING", "THROTTLED", "QUEUED", "IN_PROGRESS", "DONE", "FAILED", "INVALID", "CANCELLED"])
       .describe("The current state of the render job."),
 
     // Success output
-    output: z
-      .string()
-      .optional()
-      .describe("The render output URL (only available when state is DONE)."),
+    output: z.string().optional().describe("The render output URL (only available when state is DONE)."),
 
     // Error information
     errorMessage: z.string().optional().describe("Error message, if any."),
@@ -138,7 +109,7 @@ Use when:
               errorMessage: render.error.message,
               errorDetails: JSON.stringify(render.error.details),
             },
-            true
+            true,
           );
         }
 
@@ -153,17 +124,20 @@ Use when:
           templateVariantName: render.templateName,
           state: render.state,
         });
-      } catch (err: any) {
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Failed to check render status";
+        const details = err instanceof Error ? (err.stack ?? err.message) : JSON.stringify(err);
+
         return toToolResponse(
           {
             message: "Render status could not be retrieved.",
             renderId,
-            errorMessage: err.message || "Failed to check render status",
-            errorDetails: err,
+            errorMessage: message,
+            errorDetails: details,
           },
-          true
+          true,
         );
       }
-    }
+    },
   );
 }

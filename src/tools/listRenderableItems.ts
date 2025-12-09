@@ -1,86 +1,53 @@
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { PlainlySdk } from "../sdk";
+import type { PlainlySdk } from "../sdk";
 import { toToolResponse } from "../utils/toolResponse";
 
-export function registerListRenderableItems(
-  sdk: PlainlySdk,
-  server: McpServer
-) {
+export function registerListRenderableItems(sdk: PlainlySdk, server: McpServer) {
   const Input = {
     excludeDesigns: z
       .boolean()
       .optional()
       .describe(
-        "If true, excludes designs from the results. Avoid setting both excludeDesigns and excludeProjects to true."
+        "If true, excludes designs from the results. Avoid setting both excludeDesigns and excludeProjects to true.",
       ),
     excludeProjects: z
       .boolean()
       .optional()
       .describe(
-        "If true, excludes projects from the results. Avoid setting both excludeDesigns and excludeProjects to true."
+        "If true, excludes projects from the results. Avoid setting both excludeDesigns and excludeProjects to true.",
       ),
   };
   const Output = {
     items: z
       .array(
         z.object({
-          isDesign: z
-            .boolean()
-            .describe(
-              "True when the parent is a Design; false when it is a Project."
-            ),
+          isDesign: z.boolean().describe("True when the parent is a Design; false when it is a Project."),
           id: z.string().describe("Parent identifier (projectId or designId)."),
           name: z.string().describe("Parent display name."),
-          description: z
-            .string()
-            .nullable()
-            .describe(
-              "Short description used for discovery and relevance matching."
-            ),
+          description: z.string().nullable().describe("Short description used for discovery and relevance matching."),
           metadata: z
             .object({
-              category: z
-                .string()
-                .nullable()
-                .describe(
-                  "High-level category label for Designs (if present)."
-                ),
+              category: z.string().nullable().describe("High-level category label for Designs (if present)."),
               attributes: z
                 .record(z.any())
                 .nullable()
-                .describe(
-                  "Additional key-value metadata (e.g., tags, labels). May be null/omitted when unavailable."
-                ),
+                .describe("Additional key-value metadata (e.g., tags, labels). May be null/omitted when unavailable."),
             })
-            .describe(
-              "Metadata primarily used for semantic filtering and recommendations."
-            ),
+            .describe("Metadata primarily used for semantic filtering and recommendations."),
           templates: z
             .array(
               z.object({
-                id: z
-                  .string()
-                  .describe("Template/variant identifier (renderable leaf)."),
+                id: z.string().describe("Template/variant identifier (renderable leaf)."),
                 name: z.string().describe("Template/variant display name."),
-                aspectRatio: z
-                  .string()
-                  .describe(
-                    "Aspect ratio string (e.g., '16:9', '1:1', '9:16')."
-                  ),
-                durationSeconds: z
-                  .number()
-                  .describe("Template/variant duration in seconds."),
-              })
+                aspectRatio: z.string().describe("Aspect ratio string (e.g., '16:9', '1:1', '9:16')."),
+                durationSeconds: z.number().describe("Template/variant duration in seconds."),
+              }),
             )
-            .describe(
-              "Lightweight preview of renderable leaf options under this parent (no parameter schema here)."
-            ),
-        })
+            .describe("Lightweight preview of renderable leaf options under this parent (no parameter schema here)."),
+        }),
       )
-      .describe(
-        "Renderable parents (Projects/Designs) with preview of their templates/variants."
-      ),
+      .describe("Renderable parents (Projects/Designs) with preview of their templates/variants."),
   };
 
   server.registerTool(
@@ -116,6 +83,6 @@ Follow-ups:
       });
 
       return toToolResponse({ items });
-    }
+    },
   );
 }
