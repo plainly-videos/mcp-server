@@ -1,6 +1,8 @@
-import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-
+import { z } from "zod";
+import env from "../env";
+import type { PlainlySdk, RenderableItemDetails } from "../sdk";
+import { normalizeError, toToolResponse } from "../utils/toolResponse";
 import {
   GeneralRenderError,
   InvalidRenderError,
@@ -9,55 +11,27 @@ import {
   ProjectDesignNotFoundError,
   TemplateVariantNotFoundError,
 } from "./errors";
-import env from "../env";
-import { toToolResponse } from "../utils/toolResponse";
-import { PlainlySdk, RenderableItemDetails } from "../sdk";
 
 export function registerRenderItem(sdk: PlainlySdk, server: McpServer) {
   const Input = {
-    isDesign: z
-      .boolean()
-      .describe(
-        "True when the parent is a Design; false when it is a Project."
-      ),
-    projectDesignId: z
-      .string()
-      .describe("Parent identifier (projectId or designId)."),
-    templateVariantId: z
-      .string()
-      .describe(
-        "Template/variant identifier (the renderable leaf under the parent)."
-      ),
+    isDesign: z.boolean().describe("True when the parent is a Design; false when it is a Project."),
+    projectDesignId: z.string().describe("Parent identifier (projectId or designId)."),
+    templateVariantId: z.string().describe("Template/variant identifier (the renderable leaf under the parent)."),
     parameters: z
       .record(z.any())
       .describe(
-        "Key-value parameters required by the chosen template/variant to customize the render. Mandatory parameters must be provided. Parameter type must be respected."
+        "Key-value parameters required by the chosen template/variant to customize the render. Mandatory parameters must be provided. Parameter type must be respected.",
       ),
   };
 
   const Output = {
     // Successful response
     renderId: z.string().optional().describe("Server-assigned render job ID."),
-    renderDetailsPageUrl: z
-      .string()
-      .optional()
-      .describe("URL to the render details page."),
-    projectDesignId: z
-      .string()
-      .describe("Parent identifier (projectId or designId)."),
-    templateVariantId: z
-      .string()
-      .describe(
-        "Template/variant identifier (the renderable leaf under the parent)."
-      ),
-    projectDesignName: z
-      .string()
-      .optional()
-      .describe("Name of the project or design."),
-    templateVariantName: z
-      .string()
-      .optional()
-      .describe("Name of the template or variant."),
+    renderDetailsPageUrl: z.string().optional().describe("URL to the render details page."),
+    projectDesignId: z.string().describe("Parent identifier (projectId or designId)."),
+    templateVariantId: z.string().describe("Template/variant identifier (the renderable leaf under the parent)."),
+    projectDesignName: z.string().optional().describe("Name of the project or design."),
+    templateVariantName: z.string().optional().describe("Name of the template or variant."),
     // Failure response
     errorMessage: z.string().optional().describe("Error message, if any."),
     errorSolution: z.string().optional().describe("Error solution, if any."),
@@ -101,16 +75,9 @@ Use when:
       // TODO: Handle object parameters "my.parameter.x"
 
       try {
-        const projectDesignItems = await validateProjectDesignExists(
-          sdk,
-          isDesign,
-          projectDesignId
-        );
+        const projectDesignItems = await validateProjectDesignExists(sdk, isDesign, projectDesignId);
 
-        const renderableItem = await validateTemplateVariantExists(
-          projectDesignItems,
-          templateVariantId
-        );
+        const renderableItem = await validateTemplateVariantExists(projectDesignItems, templateVariantId);
 
         await validateTemplateVariantParameters(renderableItem, parameters);
 
@@ -137,17 +104,11 @@ Use when:
                 });
               });
 
-            throw new InvalidRenderError(
-              `${render.error.message || ""}`,
-              invalidParams
-            );
+            throw new InvalidRenderError(`${render.error.message || ""}`, invalidParams);
           }
 
           // General error
-          throw new GeneralRenderError(
-            `${render.error.message || ""}`,
-            render.error
-          );
+          throw new GeneralRenderError(`${render.error.message || ""}`, render.error);
         }
 
         // Successful submission
@@ -159,7 +120,7 @@ Use when:
           projectDesignName: render.projectName,
           templateVariantName: render.templateName,
         });
-      } catch (err: any) {
+      } catch (err: unknown) {
         // Known errors with specific handling
         if (err instanceof PlainlyMcpServerError) {
           return toToolResponse(
@@ -168,26 +129,23 @@ Use when:
               solution: err.solution,
               details: err.details,
             },
-            true
+            true,
           );
         }
 
         // All other errors
-        return toToolResponse(err, true);
+        return toToolResponse(normalizeError(err), true);
       }
-    }
+    },
   );
 }
 
 const validateProjectDesignExists = async (
   sdk: PlainlySdk,
   isDesign: boolean,
-  projectDesignId: string
+  projectDesignId: string,
 ): Promise<RenderableItemDetails[]> => {
-  const projectDesignItems = await sdk.getRenderableItemsDetails(
-    projectDesignId,
-    isDesign
-  );
+  const projectDesignItems = await sdk.getRenderableItemsDetails(projectDesignId, isDesign);
 
   if (projectDesignItems.length === 0) {
     throw new ProjectDesignNotFoundError(projectDesignId);
@@ -198,17 +156,12 @@ const validateProjectDesignExists = async (
 
 const validateTemplateVariantExists = async (
   projectDesignItems: RenderableItemDetails[],
-  templateVariantId: string
+  templateVariantId: string,
 ): Promise<RenderableItemDetails> => {
-  const renderableItem = projectDesignItems.find(
-    (item) => item.templateVariantId === templateVariantId
-  );
+  const renderableItem = projectDesignItems.find((item) => item.templateVariantId === templateVariantId);
 
   if (!renderableItem) {
-    throw new TemplateVariantNotFoundError(
-      templateVariantId,
-      projectDesignItems[0].projectDesignId
-    );
+    throw new TemplateVariantNotFoundError(templateVariantId, projectDesignItems[0].projectDesignId);
   }
 
   return renderableItem;
@@ -216,17 +169,13 @@ const validateTemplateVariantExists = async (
 
 const validateTemplateVariantParameters = async (
   renderableItem: RenderableItemDetails,
-  parameters: Record<string, any>
+  parameters: Record<string, unknown>,
 ): Promise<void> => {
   const mandatoryParams = renderableItem.parameters.filter((p) => p.mandatory);
   const providedParams = Object.keys(parameters);
-  const missingParams = mandatoryParams.filter(
-    (p) => !providedParams.includes(p.key)
-  );
+  const missingParams = mandatoryParams.filter((p) => !providedParams.includes(p.key));
 
   if (missingParams.length > 0) {
-    throw new MissingParametersError(
-      missingParams.map((p) => ({ key: p.key, label: p.label }))
-    );
+    throw new MissingParametersError(missingParams.map((p) => ({ key: p.key, label: p.label })));
   }
 };

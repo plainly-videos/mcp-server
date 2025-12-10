@@ -1,14 +1,14 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-  registerListRenderableItems,
-  registerGetRenderableItemDetails,
-  registerRenderItem,
-  registerCheckRenderStatus,
-} from "./tools";
+import type { AxiosInstance } from "axios";
 import { PACKAGE_NAME, PACKAGE_VERSION } from "./contants";
-import { AxiosInstance } from "axios";
-import createPlainlyClient, { PlainlySdk } from "./sdk";
+import createPlainlyClient, { type PlainlySdk } from "./sdk";
+import {
+  registerCheckRenderStatus,
+  registerGetRenderableItemDetails,
+  registerListRenderableItems,
+  registerRenderItem,
+} from "./tools";
 
 export class PlainlyMcpServer {
   mcpServer: McpServer;
