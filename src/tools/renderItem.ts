@@ -51,6 +51,7 @@ How to use:
 
 Guidance:
 - Never submit more than one render with the same parameters, unless the user explicitly requests it.
+- Template parameters must be nested under the top-level \`parameters\` object (do not place them at the top level).
 - Use parameters to customize the render.
 - All mandatory parameters must be provided.
 - Provide values for optional parameters if it makes sense.
@@ -64,6 +65,8 @@ Guidance:
 - If a parameter has a default value and the user does not provide a value, the default will be used.
 - If the user is unsure about a parameter, ask for clarification rather than guessing.
 - When referencing parameters in conversation, use their \`label\` or \`description\` for clarity.
+Example:
+- Input shape: { isDesign, projectDesignId, templateVariantId, parameters: { title: "My Title", image: "https://..." } }
 
 Use when:
 - The user wants to create a video from a specific template/variant with defined parameters.
