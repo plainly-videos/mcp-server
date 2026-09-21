@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2022",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "preserve",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -14,6 +13,7 @@
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
     "noEmit": true,
+    "types": ["node"],
     "rootDir": "."
   },
   "include": ["xmcp-env.d.ts", "xmcp.config.ts", "src/**/*.ts"],
