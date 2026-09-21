@@ -22,16 +22,18 @@ export const toToolResponse = (output: { [key: string]: unknown }, isError = fal
   }
 };
 
-export const normalizeError = (err: unknown): { message: string; details?: unknown } => {
+/**
+ * Reduces an unknown thrown value to the string fields the tool output schemas
+ * declare. Stack traces are deliberately dropped: they leak local filesystem
+ * paths and bundle offsets, and give the model nothing it can act on.
+ */
+export const normalizeError = (err: unknown): { message: string; details?: string } => {
   if (err instanceof Error) {
-    return {
-      message: err.message,
-      details: err.stack ?? err,
-    };
+    return { message: err.message };
   }
 
   return {
     message: "An unknown error occurred",
-    details: err,
+    details: typeof err === "string" ? err : JSON.stringify(err),
   };
 };

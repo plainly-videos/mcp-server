@@ -30,7 +30,6 @@ export const outputSchema = {
 
   // Error information
   errorMessage: z.string().optional().describe("Error message, if any."),
-  errorSolution: z.string().optional().describe("Error solution, if any."),
   errorDetails: z.string().optional().describe("Error details, if any."),
 };
 
@@ -118,15 +117,12 @@ export default async function checkRenderStatus({ renderId }: InferSchema<typeof
       ...common,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Failed to check render status";
-    const details = err instanceof Error ? (err.stack ?? err.message) : JSON.stringify(err);
-
     return toToolResponse(
       {
         message: "Render status could not be retrieved.",
         renderId,
-        errorMessage: message,
-        errorDetails: details,
+        renderDetailsPageUrl: `${env.PLAINLY_APP_URL}/dashboard/renders/${renderId}`,
+        errorMessage: err instanceof Error ? err.message : "Failed to check render status",
       },
       true,
     );

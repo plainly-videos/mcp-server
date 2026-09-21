@@ -39,9 +39,6 @@ export const outputSchema = {
   message: z.string().optional().describe("Message describing the failure, if any."),
   solution: z.string().optional().describe("Suggested resolution for the failure, if any."),
   details: z.string().optional().describe("Error details, if any."),
-  errorMessage: z.string().optional().describe("Error message, if any."),
-  errorSolution: z.string().optional().describe("Error solution, if any."),
-  errorDetails: z.string().optional().describe("Error details, if any."),
 };
 
 export const metadata: ToolMetadata = {
@@ -92,9 +89,9 @@ export default async function renderItem({
 }: InferSchema<typeof schema>) {
   // TODO: Handle object parameters "my.parameter.x"
 
-  const sdk = getSdk();
-
   try {
+    const sdk = getSdk();
+
     const projectDesignItems = await validateProjectDesignExists(sdk, isDesign, projectDesignId);
 
     const renderableItem = validateTemplateVariantExists(projectDesignItems, templateVariantId);
