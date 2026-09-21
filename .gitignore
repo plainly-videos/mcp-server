@@ -1,7 +1,7 @@
 mcp.json
 node_modules/
 dist/
-.smithery/
+.xmcp/
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
@@ -10,3 +10,4 @@ dist/
 !.yarn/versions
 .DS_Store
 *.log
+xmcp-env.d.ts
