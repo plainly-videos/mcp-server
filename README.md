@@ -1,7 +1,5 @@
 # Plainly's Official MCP Server
 
-[![smithery badge](https://smithery.ai/badge/@plainly-videos/mcp-server)](https://smithery.ai/server/@plainly-videos/mcp-server)
-
 The official MCP server for [Plainly Videos](https://plainlyvideos.com), a cloud-based video automation platform that renders Adobe After Effects templates natively in the cloud.
 
 It lets AI agents and MCP clients (Claude, Cursor, VS Code, or any MCP-compatible client) browse your video templates, fill in their parameters, submit renders, and check the render status of each one.
@@ -65,18 +63,6 @@ Combine it with other MCP servers to build agents that generate videos from live
 
    > 🔑 Replace <PLAINLY_API_KEY> with your actual API key.
 
-### Install via Smithery
-
-Go to [Smithery Plainly MCP page](https://smithery.ai/server/@plainly-videos/mcp-server), select your LLM client, and copy the generated command.
-
-For example, with Claude as the client:
-
-```bash
-npx -y @smithery/cli@latest install @plainly-videos/mcp-server --client claude --key <YOUR_SMITHERY_KEY>
-```
-
-> 🔑 Replace <YOUR_SMITHERY_KEY> with your Smithery API key.
-
 ## 🛠️ Available Tools
 
 - `list_renderable_items` - returns a list of all criteria matching designs and custom projects for authenticated user
@@ -109,7 +95,7 @@ yarn build
   "servers": {
     "plainly": {
       "command": "node",
-      "args": ["<FULL PATH TO dist/cli.js>"],
+      "args": ["<FULL PATH TO dist/stdio.js>"],
       "env": {
         "PLAINLY_API_KEY": "<PLAINLY_API_KEY>"
       }
