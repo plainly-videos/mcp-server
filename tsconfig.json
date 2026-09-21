@@ -12,6 +12,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
     "noEmit": true,
     "types": ["node"],
     "rootDir": "."
